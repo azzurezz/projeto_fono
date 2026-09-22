@@ -240,7 +240,7 @@ p2 <- ggplot(p2_df, aes(x = reorder(Codigo, Pct_Acerto_Medio), y = Pct_Acerto_Me
   coord_flip(ylim = c(0, 105)) +
   scale_fill_gradient(low = "#e7298a", high = "#7570b3") +
   labs(title = "MACb Discurso Narrativo: Porcentagem Média de Acerto",
-       subtitle = "Ideias Principais e Informações Lembradas apresentam maior dificuldade",
+       subtitle = "Porcentagem média de acerto por sub-dimensão",
        x = "Sub-dimensão", y = "Acerto Médio (%)") +
   theme_custom
 
@@ -254,7 +254,7 @@ p3 <- ggplot(p3_df, aes(x = reorder(Codigo, Pct_Acerto_Medio), y = Pct_Acerto_Me
   coord_flip(ylim = c(0, 105)) +
   scale_fill_gradient(low = "#e6ab02", high = "#66a61e") +
   labs(title = "MACb Discurso Inicial: Porcentagem Média de Acerto",
-       subtitle = "Comportamento Não Verbal e Prosódia apresentam alta taxa de acerto",
+       subtitle = "Porcentagem média de acerto por sub-dimensão",
        x = "Sub-dimensão", y = "Acerto Médio (%)") +
   theme_custom
 

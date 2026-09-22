@@ -98,11 +98,3 @@ Se preferir utilizar Python (`pandas`, `scipy`, `statsmodels`, `seaborn`):
 ```bash
 python3 src/analise_macb.py
 ```
-
----
-
-## 🔍 Conclusões Neuro-Linguísticas
-
-- **Discurso Narrativo**: Apresentou a maior complexidade e taxa de erro (`IP`: 70,57% e `InfL`: 69,81% de dificuldade), refletindo a sobrecarga da memória episódica de trabalho e processamento pragmático-inferencial.
-- **Explicação vs. Reconhecimento**: Houve diferença estatisticamente significativa ($p < 0{,}01$) indicando que tarefas que exigem explanação verbal aberta (ex: `IME` e `JSe`) são significativamente mais difíceis do que tarefas de reconhecimento/múltipla escolha (`IMA` e `JSi`).
-- **Fluência Verbal Livre**: Demonstrou declínio significativo da curva de evocação lexical após os primeiros 30 segundos ($\chi^2 = 72{,}46$, $p < 0{,}001$).
