@@ -126,18 +126,17 @@ executar_friedman_posthoc <- function(pct_df) {
         Media_Tarefa1 = round(m1, 2),
         Media_Tarefa2 = round(m2, 2),
         Diferenca_Media = round(m1 - m2, 2),
-        p_bruto = w_test$p.value,
+        p_num = w_test$p.value,
         stringsAsFactors = FALSE
       )
       idx <- idx + 1
     }
   }
   posthoc_df <- bind_rows(pairs_list)
-  p_adj <- p.adjust(posthoc_df$p_bruto, method = "holm")
-  posthoc_df$Significativo <- p_adj < 0.05
+  posthoc_df$Significativo <- posthoc_df$p_num < 0.05
   posthoc_df$Resultado <- ifelse(posthoc_df$Significativo, "Significativo", "Não significativo")
-  posthoc_df$p_bruto <- formatC(posthoc_df$p_bruto, format = "e", digits = 3)
-  posthoc_df$p_ajustado_Holm <- formatC(p_adj, format = "e", digits = 3)
+  posthoc_df$p_bruto <- formatC(posthoc_df$p_num, format = "f", digits = 5)
+  posthoc_df$p_valor <- formatC(posthoc_df$p_num, format = "f", digits = 5)
 
   list(
     chi2 = as.numeric(f_test$statistic),
@@ -313,6 +312,27 @@ p5 <- ggplot(p5_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Difi
 
 ggsave(file.path(PLOTS_DIR, "ranking_geral_dificuldade.png"), plot = p5, width = 9, height = 7, dpi = 300)
 
+# 5. Tabela Resumo dos Testes de Friedman
+res_friedman_summary <- data.frame(
+  Bloco = c("MACb Completo", "Discurso Narrativo", "Discurso Inicial", "Fluência Verbal"),
+  Chi2 = c(round(res_f_comp$chi2, 2), round(res_f_narr$chi2, 2), round(res_f_inic$chi2, 2), round(res_f_fluen$chi2, 2)),
+  GL = c(res_f_comp$df, res_f_narr$df, res_f_inic$df, res_f_fluen$df),
+  p_valor = c(
+    formatC(res_f_comp$p_value, format = "f", digits = 5),
+    formatC(res_f_narr$p_value, format = "f", digits = 5),
+    formatC(res_f_inic$p_value, format = "f", digits = 5),
+    formatC(res_f_fluen$p_value, format = "f", digits = 5)
+  ),
+  Kendall_W = c(round(res_f_comp$kendall_w, 3), round(res_f_narr$kendall_w, 3), round(res_f_inic$kendall_w, 3), round(res_f_fluen$kendall_w, 3)),
+  Resultado = c(
+    ifelse(res_f_comp$p_value < 0.05, "Significativo", "Não significativo"),
+    ifelse(res_f_narr$p_value < 0.05, "Significativo", "Não significativo"),
+    ifelse(res_f_inic$p_value < 0.05, "Significativo", "Não significativo"),
+    ifelse(res_f_fluen$p_value < 0.05, "Significativo", "Não significativo")
+  ),
+  stringsAsFactors = FALSE
+)
+
 # Save RDS object for report compilation
 saveRDS(list(
   desc_comp = desc_comp,
@@ -323,6 +343,7 @@ saveRDS(list(
   res_f_inic = res_f_inic,
   res_f_narr = res_f_narr,
   res_f_fluen = res_f_fluen,
+  res_friedman_summary = res_friedman_summary,
   df_ranking = df_ranking
 ), file.path(RESULTS_DIR, "resultados_macb.rds"))
 

@@ -40,7 +40,23 @@ Este relatório apresenta os resultados da análise estatística descritiva (Mé
 1. **Estatística descritiva**: Para cada tarefa, foram calculadas as métricas de tendência central (Média, Mediana), dispersão (Desvio-Padrão, Intervalo Interquartil Q1–Q3) e amplitude (Mínimo, Máximo).
 2. **Normalização de escalas**: Como as tarefas possuem tetos de pontuação distintos (ex: IME máx = 12, JSi máx = 6, IP máx = 18), calculou-se o percentual de acerto médio em relação ao valor teto ($\% \text{Acerto} = \frac{\text{Pontuação Obtida}}{\text{Pontuação Máxima}} \times 100\%$). A dificuldade é dada pelo complementar ($\% \text{Dificuldade} = 100\% - \% \text{Acerto}$).
 3. **Teste não paramétrico de Friedman**: Utilizado para determinar se existem diferenças estatisticamente significativas na dificuldade entre as tarefas de medidas repetidas. O tamanho do efeito foi estimado via W de Kendall.
-4. **Análise post-hoc pareada**: Testes pareados de Wilcoxon com ajuste de Holm-Bonferroni para comparações múltiplas.
+4. **Análise post-hoc pareada**: Testes pareados de Wilcoxon (p-valores sem ajuste) para comparações múltiplas.
+
+---
+
+# Resumo dos testes de Friedman
+
+A tabela a seguir apresenta os resultados consolidados do teste não paramétrico de Friedman e do tamanho do efeito ($W$ de Kendall) para cada um dos blocos funcionais analisados:
+
+```{r friedman-tabela-resumo}
+kable(res$res_friedman_summary,
+      col.names = c("Bloco / Domínio", "Estatística $\\chi^2$", "gl", "p-valor", "W de Kendall", "Resultado"),
+      align = c("l", "c", "c", "c", "c", "l"),
+      caption = "Resumo dos testes de Friedman e tamanhos do efeito por bloco",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
 
 ---
 
@@ -89,16 +105,29 @@ kable(res$desc_comp[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvi
 \end{figure}
 
 ### Teste não paramétrico de Friedman (MACb completo)
-- **Estatística $\chi^2$**: `r round(res$res_f_comp$chi2, 4)`
-- **Graus de liberdade**: `r res$res_f_comp$df`
-- **p-valor**: `r formatC(res$res_f_comp$p_value, format="e", digits=3)` (Diferença altamente significativa, $p < 0{,}001$)
-- **Tamanho do efeito (Kendall's W)**: `r round(res$res_f_comp$kendall_w, 4)`
 
-### Comparações pareadas post-hoc (Holm-Bonferroni)
+```{r friedman-completo-tbl}
+f_comp_tbl <- data.frame(
+  Chi2 = round(res$res_f_comp$chi2, 4),
+  GL = res$res_f_comp$df,
+  p_valor = formatC(res$res_f_comp$p_value, format="f", digits=5),
+  Kendall_W = round(res$res_f_comp$kendall_w, 4),
+  Resultado = ifelse(res$res_f_comp$p_value < 0.05, "Significativo", "Não significativo")
+)
+kable(f_comp_tbl,
+      col.names = c("$\\chi^2$", "gl", "p-valor", "W de Kendall", "Resultado"),
+      align = c("c", "c", "c", "c", "l"),
+      caption = "Resultado do teste de Friedman (MACb completo)",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+### Comparações pareadas post-hoc (Wilcoxon)
 
 ```{r posthoc-completo}
-kable(res$res_f_comp$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Comparação", "Tarefa~1~(%)", "Tarefa~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
+kable(res$res_f_comp$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_bruto", "Resultado")],
+      col.names = c("Comparação", "Tarefa 1 (%)", "Tarefa 2 (%)", "Diferença (%)", "p-valor", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (MACb completo)",
       booktabs = TRUE,
@@ -128,15 +157,29 @@ kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "
 \end{figure}
 
 ### Teste não paramétrico de Friedman (discurso narrativo)
-- **Estatística $\chi^2$**: `r round(res$res_f_narr$chi2, 4)`
-- **p-valor**: `r formatC(res$res_f_narr$p_value, format="e", digits=3)`
-- **Kendall's W**: `r round(res$res_f_narr$kendall_w, 4)`
 
-### Comparações pareadas post-hoc (Holm-Bonferroni)
+```{r friedman-narrativo-tbl}
+f_narr_tbl <- data.frame(
+  Chi2 = round(res$res_f_narr$chi2, 4),
+  GL = res$res_f_narr$df,
+  p_valor = formatC(res$res_f_narr$p_value, format="f", digits=5),
+  Kendall_W = round(res$res_f_narr$kendall_w, 4),
+  Resultado = ifelse(res$res_f_narr$p_value < 0.05, "Significativo", "Não significativo")
+)
+kable(f_narr_tbl,
+      col.names = c("$\\chi^2$", "gl", "p-valor", "W de Kendall", "Resultado"),
+      align = c("c", "c", "c", "c", "l"),
+      caption = "Resultado do teste de Friedman (discurso narrativo)",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+### Comparações pareadas post-hoc (Wilcoxon)
 
 ```{r posthoc-narrativo}
-kable(res$res_f_narr$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Comparação", "Tarefa~1~(%)", "Tarefa~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
+kable(res$res_f_narr$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_bruto", "Resultado")],
+      col.names = c("Comparação", "Tarefa 1 (%)", "Tarefa 2 (%)", "Diferença (%)", "p-valor", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (discurso narrativo)",
       booktabs = TRUE,
@@ -164,15 +207,29 @@ kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "De
 \end{figure}
 
 ### Teste não paramétrico de Friedman (discurso inicial)
-- **Estatística $\chi^2$**: `r round(res$res_f_inic$chi2, 4)`
-- **p-valor**: `r formatC(res$res_f_inic$p_value, format="e", digits=3)`
-- **Kendall's W**: `r round(res$res_f_inic$kendall_w, 4)`
 
-### Comparações pareadas post-hoc (Holm-Bonferroni)
+```{r friedman-inicial-tbl}
+f_inic_tbl <- data.frame(
+  Chi2 = round(res$res_f_inic$chi2, 4),
+  GL = res$res_f_inic$df,
+  p_valor = formatC(res$res_f_inic$p_value, format="f", digits=5),
+  Kendall_W = round(res$res_f_inic$kendall_w, 4),
+  Resultado = ifelse(res$res_f_inic$p_value < 0.05, "Significativo", "Não significativo")
+)
+kable(f_inic_tbl,
+      col.names = c("$\\chi^2$", "gl", "p-valor", "W de Kendall", "Resultado"),
+      align = c("c", "c", "c", "c", "l"),
+      caption = "Resultado do teste de Friedman (discurso inicial)",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+### Comparações pareadas post-hoc (Wilcoxon)
 
 ```{r posthoc-inicial}
-kable(res$res_f_inic$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Comparação", "Tarefa~1~(%)", "Tarefa~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
+kable(res$res_f_inic$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_bruto", "Resultado")],
+      col.names = c("Comparação", "Tarefa 1 (%)", "Tarefa 2 (%)", "Diferença (%)", "p-valor", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (discurso inicial)",
       booktabs = TRUE,
@@ -200,15 +257,29 @@ kable(res$desc_fluencia,
 \end{figure}
 
 ### Teste não paramétrico de Friedman (fluência verbal)
-- **Estatística $\chi^2$**: `r round(res$res_f_fluen$chi2, 4)`
-- **p-valor**: `r formatC(res$res_f_fluen$p_value, format="e", digits=3)`
-- **Kendall's W**: `r round(res$res_f_fluen$kendall_w, 4)`
 
-### Comparações pareadas post-hoc (Holm-Bonferroni)
+```{r friedman-fluencia-tbl}
+f_fluen_tbl <- data.frame(
+  Chi2 = round(res$res_f_fluen$chi2, 4),
+  GL = res$res_f_fluen$df,
+  p_valor = formatC(res$res_f_fluen$p_value, format="f", digits=5),
+  Kendall_W = round(res$res_f_fluen$kendall_w, 4),
+  Resultado = ifelse(res$res_f_fluen$p_value < 0.05, "Significativo", "Não significativo")
+)
+kable(f_fluen_tbl,
+      col.names = c("$\\chi^2$", "gl", "p-valor", "W de Kendall", "Resultado"),
+      align = c("c", "c", "c", "c", "l"),
+      caption = "Resultado do teste de Friedman (fluência verbal)",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+### Comparações pareadas post-hoc (Wilcoxon)
 
 ```{r posthoc-fluencia}
-kable(res$res_f_fluen$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Comparação", "Média~1", "Média~2", "Diferença", "p-valor~ajustado", "Resultado"),
+kable(res$res_f_fluen$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_bruto", "Resultado")],
+      col.names = c("Comparação", "Média 1", "Média 2", "Diferença", "p-valor", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (fluência verbal)",
       booktabs = TRUE,
