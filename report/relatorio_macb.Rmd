@@ -1,0 +1,160 @@
+---
+title: "Relatório de análise estatística descritiva e dificuldade de itens"
+subtitle: "Bateria MACb"
+author: "Projeto Fonoaudiologia - Análise Estatística"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    number_sections: true
+    highlight: tango
+geometry: margin=2cm
+lang: "pt-BR"
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{float}
+  - \usepackage{microtype}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.pos = "H"
+)
+
+library(knitr)
+library(dplyr)
+
+# Carregar dados processados pelo script R
+res <- readRDS("../data/results/resultados_macb.rds")
+```
+
+# Resumo e metodologia
+
+Este relatório apresenta os resultados da análise estatística descritiva (Média, Mediana, Desvio-Padrão, Mínimo e Máximo) e a avaliação não paramétrica de dificuldade dos itens/subtestes da Bateria MACb, aplicada a uma amostra de $N = 47$ participantes.
+
+## Métodos estatísticos aplicados
+1. **Estatística descritiva**: Para cada subteste, foram calculadas as métricas de tendência central (Média, Mediana), dispersão (Desvio-Padrão, Intervalo Interquartil Q1–Q3) e amplitude (Mínimo, Máximo).
+2. **Normalização de escalas**: Como os subtestes possuem tetos de pontuação distintos (ex: IME máx = 12, JSi máx = 6, IP máx = 18), calculou-se o percentual de acerto médio em relação ao valor teto ($\% \text{Acerto} = \frac{\text{Pontuação Obtida}}{\text{Pontuação Máxima}} \times 100\%$). A dificuldade é dada pelo complementar ($\% \text{Dificuldade} = 100\% - \% \text{Acerto}$).
+3. **Teste não paramétrico de Friedman**: Utilizado para determinar se existem diferenças estatisticamente significativas na dificuldade entre as tarefas de medidas repetidas. O tamanho do efeito foi estimado via **W de Kendall**.
+4. **Análise post-hoc pareada**: Testes pareados de Wilcoxon com ajuste de Holm-Bonferroni para comparações múltiplas.
+
+---
+
+# Ranking geral de dificuldade das tarefas MACb
+
+A tabela e o gráfico a seguir ordenam as tarefas da bateria MACb da mais difícil (maior taxa de erro/dificuldade) para a mais fácil (maior taxa de acerto):
+
+```{r ranking-tabela}
+kable(res$df_ranking[, c("Rank_Dificuldade", "Codigo", "Subteste", "Categoria", "Media_Obtida", "Maximo", "Pct_Acerto_Medio", "Pct_Dificuldade_Media")],
+      col.names = c("Rank", "Código", "Subteste", "Categoria", "Média obtida", "Máx", "% Acerto", "% Dif"),
+      caption = "Ranking geral de dificuldade dos subtestes do MACb",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../data/plots/ranking_geral_dificuldade.png}
+\caption{Ranking geral de dificuldade do MACb (\% de erro médio por tarefa)}
+\end{figure}
+
+\newpage
+
+# Análise estatística por bloco funcional
+
+## MACb completo (subtestes principais)
+
+A tabela abaixo exibe as estatísticas descritivas para os subtestes da aba *MACb Completo*:
+
+```{r desc-completo}
+kable(res$desc_comp[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media", "Mediana", "Desvio_Padrao", "Minimo", "Maximo", "Pct_Acerto_Medio", "Pct_Dificuldade_Media")],
+      col.names = c("Código", "Subteste", "Máx", "Média", "Mediana", "DP", "Mín", "Máx", "% Acerto", "% Dif"),
+      caption = "Estatística descritiva: MACb completo",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_macb_completo.png}
+\caption{MACb completo: porcentagem média de acerto por subteste}
+\end{figure}
+
+### Teste não paramétrico de Friedman (MACb completo)
+- **Estatística $\chi^2$**: `r round(res$res_f_comp$chi2, 4)`
+- **Graus de liberdade**: `r res$res_f_comp$df`
+- **p-valor**: `r formatC(res$res_f_comp$p_value, format="e", digits=3)` (Diferença altamente significativa, $p < 0{,}001$)
+- **Tamanho do efeito (Kendall's W)**: `r round(res$res_f_comp$kendall_w, 4)`
+
+### Comparações pareadas significativas (Holm-Bonferroni)
+
+```{r posthoc-completo}
+sig_comp <- res$res_f_comp$posthoc %>% filter(Significativo == TRUE)
+kable(sig_comp[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm")],
+      col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado"),
+      caption = "Comparações pareadas post-hoc significativas (MACb completo)",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
+\newpage
+
+## Discurso narrativo
+
+Estatísticas descritivas para as tarefas de discurso narrativo:
+
+```{r desc-narrativo}
+kable(res$desc_narrativo[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media", "Mediana", "Desvio_Padrao", "Minimo", "Maximo", "Pct_Acerto_Medio", "Pct_Dificuldade_Media")],
+      col.names = c("Código", "Subteste", "Máx", "Média", "Mediana", "DP", "Mín", "Máx", "% Acerto", "% Dif"),
+      caption = "Estatística descritiva: discurso narrativo",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_discurso_narrativo.png}
+\caption{Desempenho no discurso narrativo (\% de acerto)}
+\end{figure}
+
+### Teste não paramétrico de Friedman (discurso narrativo)
+- **Estatística $\chi^2$**: `r round(res$res_f_narr$chi2, 4)`
+- **p-valor**: `r formatC(res$res_f_narr$p_value, format="e", digits=3)`
+- **Kendall's W**: `r round(res$res_f_narr$kendall_w, 4)`
+
+\newpage
+
+## Discurso inicial
+
+```{r desc-inicial}
+kable(res$desc_inicial[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media", "Mediana", "Desvio_Padrao", "Minimo", "Maximo", "Pct_Acerto_Medio", "Pct_Dificuldade_Media")],
+      col.names = c("Código", "Subteste", "Máx", "Média", "Mediana", "DP", "Mín", "Máx", "% Acerto", "% Dif"),
+      caption = "Estatística descritiva: discurso inicial",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_discurso_inicial.png}
+\caption{Desempenho no discurso inicial (\% de acerto)}
+\end{figure}
+
+## Fluência verbal livre (curva temporal)
+
+```{r desc-fluencia}
+kable(res$desc_fluencia,
+      col.names = c("Intervalo", "Média", "Mediana", "DP", "Mín", "Máx", "Q1", "Q3"),
+      caption = "Estatística descritiva: fluência verbal livre por intervalo temporal",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../data/plots/curva_fluencia_verbal.png}
+\caption{Curva temporal da fluência verbal livre (palavras por intervalo)}
+\end{figure}

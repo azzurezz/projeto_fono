@@ -1,9 +1,6 @@
 # pasta local de dados 
 /data
 
-# reports
-/report
-
 # History files
 .Rhistory
 .Rapp.history
