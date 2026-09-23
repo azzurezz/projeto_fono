@@ -20,7 +20,7 @@ rmarkdown::render(
 )
 
 # Remove arquivos intermediários do LaTeX no diretório report
-file.remove(list.files("report", pattern = "\\.(log|tex|knit\\.md|utf8\\.md)$", full.names = TRUE))
+file.remove(list.files("report", pattern = "\\.(log|tex|knit\\.md|utf8\\.md|aux)$", full.names = TRUE))
 
 cat("==============================================================================\n")
 cat("Relatório PDF único gerado com sucesso!\n")
