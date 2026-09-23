@@ -1,6 +1,6 @@
 ---
-title: "Relatório"
-subtitle: "Análise estatística descritiva e dificuldade de itens - bateria MACb"
+title: "Relatório - análise estatística descritiva e dificuldade de itens"
+subtitle: "TCC em fonoaudiologia"
 author: "Por: Azzure Alves do Carmo"
 date: "`r Sys.Date()`"
 output: 
@@ -124,7 +124,7 @@ kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_discurso_narrativo.png}
-\caption{Desempenho no discurso narrativo (\% de dificuldade)}
+\caption{MACb discurso narrativo: porcentagem média de dificuldade por subteste}
 \end{figure}
 
 ### Teste não paramétrico de Friedman (discurso narrativo)
@@ -149,7 +149,7 @@ kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "De
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_discurso_inicial.png}
-\caption{Desempenho no discurso inicial (\% de dificuldade)}
+\caption{MACb discurso inicial: porcentagem média de dificuldade por subteste}
 \end{figure}
 
 ## Fluência verbal livre (curva temporal)
