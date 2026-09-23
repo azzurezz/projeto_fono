@@ -11,6 +11,9 @@ header-includes:
   - \usepackage{booktabs}
   - \usepackage{float}
   - \usepackage{microtype}
+  - \usepackage{etoolbox}
+  - \AtBeginEnvironment{tabular}{\small}
+  - \setlength{\tabcolsep}{4pt}
 ---
 
 ```{r setup, include=FALSE}
@@ -47,7 +50,7 @@ A tabela e o gráfico a seguir ordenam as tarefas da bateria MACb da mais difíc
 
 ```{r ranking-tabela}
 kable(res$df_ranking[, c("Codigo", "Categoria", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
-      col.names = c("Subteste", "Categoria", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade (%)"),
+      col.names = c("Subteste", "Categoria", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade~(%)"),
       align = c("l", "l", "c", "c", "c", "c", "c", "c"),
       caption = "Ranking geral de dificuldade dos subtestes do MACb",
       booktabs = TRUE,
@@ -71,7 +74,7 @@ A tabela abaixo exibe as estatísticas descritivas para os subtestes da aba *MAC
 
 ```{r desc-completo}
 kable(res$desc_comp[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
-      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade (%)"),
+      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade~(%)"),
       align = c("l", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva: MACb completo",
       booktabs = TRUE,
@@ -95,10 +98,11 @@ kable(res$desc_comp[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvi
 
 ```{r posthoc-completo}
 kable(res$res_f_comp$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado", "Resultado"),
+      col.names = c("Comparação", "Subteste~1~(%)", "Subteste~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (MACb completo)",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 
@@ -109,7 +113,7 @@ Estatísticas descritivas para as tarefas de discurso narrativo:
 
 ```{r desc-narrativo}
 kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
-      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade (%)"),
+      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade~(%)"),
       align = c("l", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva: discurso narrativo",
       booktabs = TRUE,
@@ -132,10 +136,11 @@ kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "
 
 ```{r posthoc-narrativo}
 kable(res$res_f_narr$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado", "Resultado"),
+      col.names = c("Comparação", "Subteste~1~(%)", "Subteste~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (discurso narrativo)",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 
@@ -144,7 +149,7 @@ kable(res$res_f_narr$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "D
 
 ```{r desc-inicial}
 kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
-      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade (%)"),
+      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade~(%)"),
       align = c("l", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva: discurso inicial",
       booktabs = TRUE,
@@ -167,10 +172,11 @@ kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "De
 
 ```{r posthoc-inicial}
 kable(res$res_f_inic$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado", "Resultado"),
+      col.names = c("Comparação", "Subteste~1~(%)", "Subteste~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (discurso inicial)",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 
@@ -183,6 +189,7 @@ kable(res$desc_fluencia,
       align = c("l", "c", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva: fluência verbal livre por intervalo temporal",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 
@@ -201,10 +208,11 @@ kable(res$desc_fluencia,
 
 ```{r posthoc-fluencia}
 kable(res$res_f_fluen$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Intervalos comparados", "Média 1", "Média 2", "Diferença", "p-valor ajustado", "Resultado"),
+      col.names = c("Comparação", "Média~1", "Média~2", "Diferença", "p-valor~ajustado", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (fluência verbal)",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 

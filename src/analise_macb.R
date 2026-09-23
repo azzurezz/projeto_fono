@@ -122,7 +122,7 @@ executar_friedman_posthoc <- function(pct_df) {
       m1 <- mean(pct_df[[c1]], na.rm = TRUE)
       m2 <- mean(pct_df[[c2]], na.rm = TRUE)
       pairs_list[[idx]] <- data.frame(
-        Par = paste(c1, "vs", c2),
+        Par = paste(c1, "-", c2),
         Media_Subteste1 = round(m1, 2),
         Media_Subteste2 = round(m2, 2),
         Diferenca_Media = round(m1 - m2, 2),
@@ -138,7 +138,7 @@ executar_friedman_posthoc <- function(pct_df) {
   posthoc_df$Resultado <- ifelse(posthoc_df$Significativo, "Significativo", "Não significativo")
   posthoc_df$p_bruto <- formatC(posthoc_df$p_bruto, format = "e", digits = 3)
   posthoc_df$p_ajustado_Holm <- formatC(p_adj, format = "e", digits = 3)
-  
+
   list(
     chi2 = as.numeric(f_test$statistic),
     df = as.numeric(f_test$parameter),
@@ -205,7 +205,8 @@ for (grp in list(list(sub = SUBTESTS_COMPLETO, df = df_comp, cat = "MACb Complet
 
 df_ranking <- bind_rows(all_subtests) %>%
   arrange(desc(Pct_Dificuldade_Media)) %>%
-  mutate(Rank_Dificuldade = row_number())
+  mutate(Rank_Dificuldade = row_number(),
+         Categoria = gsub(" ", "~", Categoria))
 
 # ==============================================================================
 # Gráficos com ggplot2
@@ -291,7 +292,19 @@ p5 <- ggplot(p5_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Difi
   geom_col(width = 0.7) +
   geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.5, color = "#1F2937") +
   coord_flip(ylim = c(0, 105)) +
-  scale_fill_manual(values = c("MACb Completo" = "#4B5563", "Discurso Narrativo" = "#71717A", "Discurso Inicial" = "#A1A1AA"), name = "Categoria") +
+  scale_fill_manual(
+    values = c(
+      "MACb~Completo"     = "#1F2937",
+      "Discurso~Narrativo" = "#6B7280",
+      "Discurso~Inicial"   = "#9CA3AF"
+    ),
+    labels = c(
+      "MACb~Completo"     = "MACb Completo",
+      "Discurso~Narrativo" = "Discurso Narrativo",
+      "Discurso~Inicial"   = "Discurso Inicial"
+    ),
+    name = "Categoria"
+  ) +
   labs(title = "Ranking geral de dificuldade das tarefas do MACb",
        subtitle = "Porcentagem média de erro/dificuldade por tarefa",
        x = "Subteste", y = "Dificuldade média (%)") +
