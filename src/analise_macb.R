@@ -184,16 +184,18 @@ for (grp in list(list(sub = SUBTESTS_COMPLETO, df = df_comp, cat = "MACb Complet
   for (code in names(grp$sub)) {
     info <- grp$sub[[code]]
     pct_vec <- (grp$df[[info$o]] / grp$df[[info$m]]) * 100
+    vec_o <- grp$df[[info$o]]
     all_subtests[[idx]] <- data.frame(
       Codigo = code,
       Subteste = paste0(info$name, " (", code, ")"),
       Categoria = grp$cat,
-      Media_Obtida = round(mean(grp$df[[info$o]], na.rm = TRUE), 2),
-      Maximo = grp$df[[info$m]][1],
+      Media = round(mean(vec_o, na.rm = TRUE), 2),
+      Mediana = round(median(vec_o, na.rm = TRUE), 2),
+      Desvio_Padrao = round(sd(vec_o, na.rm = TRUE), 2),
+      Minimo = round(min(vec_o, na.rm = TRUE), 2),
+      Maximo = round(max(vec_o, na.rm = TRUE), 2),
       Pct_Acerto_Medio = round(mean(pct_vec, na.rm = TRUE), 2),
       Pct_Dificuldade_Media = round(100 - mean(pct_vec, na.rm = TRUE), 2),
-      Mediana_Pct = round(median(pct_vec, na.rm = TRUE), 2),
-      Desvio_Padrao_Pct = round(sd(pct_vec, na.rm = TRUE), 2),
       stringsAsFactors = FALSE
     )
     idx <- idx + 1
@@ -219,43 +221,43 @@ theme_custom <- theme_minimal(base_size = 12) +
   )
 
 # 1. MACb Completo
-p1_df <- desc_comp %>% arrange(Pct_Acerto_Medio)
-p1 <- ggplot(p1_df, aes(x = reorder(Codigo, Pct_Acerto_Medio), y = Pct_Acerto_Medio, fill = Pct_Acerto_Medio)) +
+p1_df <- desc_comp %>% arrange(Pct_Dificuldade_Media)
+p1 <- ggplot(p1_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Dificuldade_Media, fill = Pct_Dificuldade_Media)) +
   geom_col(width = 0.7, show.legend = FALSE) +
-  geom_text(aes(label = paste0(Pct_Acerto_Medio, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#4A5568") +
+  geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#4A5568") +
   coord_flip(ylim = c(0, 105)) +
-  scale_fill_gradient(low = "#F4C2C2", high = "#AEC6CF") +
-  labs(title = "MACb completo: porcentagem média de acerto por subteste",
+  scale_fill_gradientn(colors = c("#5B9BD5", "#AB77CE", "#F49AC1")) +
+  labs(title = "MACb completo: porcentagem média de dificuldade por subteste",
        subtitle = "Subtestes principais normalizados pelo valor máximo",
-       x = "Subteste", y = "Acerto médio (%)") +
+       x = "Subteste", y = "Dificuldade média (%)") +
   theme_custom
 
 ggsave(file.path(PLOTS_DIR, "dificuldade_macb_completo.png"), plot = p1, width = 8, height = 5, dpi = 300)
 
 # 2. Discurso Narrativo
-p2_df <- desc_narrativo %>% arrange(Pct_Acerto_Medio)
-p2 <- ggplot(p2_df, aes(x = reorder(Codigo, Pct_Acerto_Medio), y = Pct_Acerto_Medio, fill = Pct_Acerto_Medio)) +
+p2_df <- desc_narrativo %>% arrange(Pct_Dificuldade_Media)
+p2 <- ggplot(p2_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Dificuldade_Media, fill = Pct_Dificuldade_Media)) +
   geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = paste0(Pct_Acerto_Medio, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#4A5568") +
+  geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#4A5568") +
   coord_flip(ylim = c(0, 105)) +
-  scale_fill_gradient(low = "#F8C8DC", high = "#B0E0E6") +
-  labs(title = "MACb discurso narrativo: porcentagem média de acerto",
-       subtitle = "Porcentagem média de acerto por sub-dimensão",
-       x = "Sub-dimensão", y = "Acerto médio (%)") +
+  scale_fill_gradientn(colors = c("#5B9BD5", "#AB77CE", "#F49AC1")) +
+  labs(title = "MACb discurso narrativo: porcentagem média de dificuldade",
+       subtitle = "Porcentagem média de dificuldade por sub-dimensão",
+       x = "Sub-dimensão", y = "Dificuldade média (%)") +
   theme_custom
 
 ggsave(file.path(PLOTS_DIR, "dificuldade_discurso_narrativo.png"), plot = p2, width = 8, height = 4.5, dpi = 300)
 
 # 3. Discurso Inicial
-p3_df <- desc_inicial %>% arrange(Pct_Acerto_Medio)
-p3 <- ggplot(p3_df, aes(x = reorder(Codigo, Pct_Acerto_Medio), y = Pct_Acerto_Medio, fill = Pct_Acerto_Medio)) +
+p3_df <- desc_inicial %>% arrange(Pct_Dificuldade_Media)
+p3 <- ggplot(p3_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Dificuldade_Media, fill = Pct_Dificuldade_Media)) +
   geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = paste0(Pct_Acerto_Medio, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#4A5568") +
+  geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#4A5568") +
   coord_flip(ylim = c(0, 105)) +
-  scale_fill_gradient(low = "#FAD2E1", high = "#BEE1E6") +
-  labs(title = "MACb discurso inicial: porcentagem média de acerto",
-       subtitle = "Porcentagem média de acerto por sub-dimensão",
-       x = "Sub-dimensão", y = "Acerto médio (%)") +
+  scale_fill_gradientn(colors = c("#5B9BD5", "#AB77CE", "#F49AC1")) +
+  labs(title = "MACb discurso inicial: porcentagem média de dificuldade",
+       subtitle = "Porcentagem média de dificuldade por sub-dimensão",
+       x = "Sub-dimensão", y = "Dificuldade média (%)") +
   theme_custom
 
 ggsave(file.path(PLOTS_DIR, "dificuldade_discurso_inicial.png"), plot = p3, width = 8, height = 4.5, dpi = 300)
@@ -268,9 +270,9 @@ p4_df <- data.frame(
 )
 
 p4 <- ggplot(p4_df, aes(x = Intervalo, y = Media, group = 1)) +
-  geom_ribbon(aes(ymin = Media - SD/2, ymax = Media + SD/2), fill = "#F4C2C2", alpha = 0.35) +
-  geom_line(color = "#769ECE", linewidth = 1.2) +
-  geom_point(color = "#5C85B8", size = 3.5) +
+  geom_ribbon(aes(ymin = Media - SD/2, ymax = Media + SD/2), fill = "#F49AC1", alpha = 0.25) +
+  geom_line(color = "#5B9BD5", linewidth = 1.2) +
+  geom_point(color = "#AB77CE", size = 3.5) +
   geom_text(aes(label = round(Media, 2)), vjust = -1, fontface = "bold", color = "#4A5568") +
   scale_y_continuous(limits = c(0, max(p4_df$Media + p4_df$SD))) +
   labs(title = "Curva temporal da fluência verbal livre",
@@ -286,7 +288,7 @@ p5 <- ggplot(p5_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Difi
   geom_col(width = 0.7, show.legend = FALSE) +
   geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.5, color = "#4A5568") +
   coord_flip(ylim = c(0, 105)) +
-  scale_fill_gradient(low = "#B0E0E6", high = "#F4C2C2") +
+  scale_fill_gradientn(colors = c("#5B9BD5", "#AB77CE", "#F49AC1")) +
   labs(title = "Ranking geral de dificuldade das tarefas do MACb",
        subtitle = "Porcentagem média de erro/dificuldade por tarefa",
        x = "Subteste / tarefa", y = "Dificuldade média (%)") +

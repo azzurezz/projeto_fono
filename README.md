@@ -1,6 +1,6 @@
 # Projeto Fono - Análise Estatística MACb
 
-Projeto de análise estatística descritiva e inferencial não paramétrica para dados quantitativos da **Bateria MACb** em Fonoaudiologia e Neuropsicologia ($N = 47$ participantes).
+Projeto de análise estatística descritiva e inferencial não paramétrica para dados quantitativos da Bateria MACb em Fonoaudiologia e Neuropsicologia ($N = 47$ participantes).
 
 ---
 
@@ -45,17 +45,21 @@ projeto_fono/
 Certifique-se de possuir o **R** (versão $\ge 4.0$) e o **pandoc** instalados.
 
 Pacotes R necessários:
+
 - `readxl`, `dplyr`, `tidyr`, `ggplot2`, `knitr`, `rmarkdown`
 
 ### Execução via R
 
 1. **Executar a análise de dados e gerar os gráficos:**
+
    ```bash
    Rscript src/analise_macb.R
    ```
 
 2. **Compilar o relatório em PDF único:**
+
    ```bash
    Rscript src/gerar_relatorio_pdf.R
    ```
+
    *O arquivo único `data/relatorio_macb.pdf` será gerado automaticamente.*

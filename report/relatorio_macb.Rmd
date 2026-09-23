@@ -1,7 +1,7 @@
 ---
-title: "Relatório de análise estatística descritiva e dificuldade de itens"
-subtitle: "Bateria MACb"
-author: "Projeto Fonoaudiologia - Análise Estatística"
+title: "Relatório"
+subtitle: "Análise estatística descritiva e dificuldade de itens - bateria MACb"
+author: "Por: Azzure Alves do Carmo"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
@@ -48,10 +48,12 @@ Este relatório apresenta os resultados da análise estatística descritiva (Mé
 A tabela e o gráfico a seguir ordenam as tarefas da bateria MACb da mais difícil (maior taxa de erro/dificuldade) para a mais fácil (maior taxa de acerto):
 
 ```{r ranking-tabela}
-kable(res$df_ranking[, c("Rank_Dificuldade", "Codigo", "Subteste", "Categoria", "Media_Obtida", "Maximo", "Pct_Acerto_Medio", "Pct_Dificuldade_Media")],
-      col.names = c("Rank", "Código", "Subteste", "Categoria", "Média obtida", "Máx", "% Acerto", "% Dif"),
+kable(res$df_ranking[, c("Rank_Dificuldade", "Codigo", "Categoria", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
+      col.names = c("Rank", "Subteste", "Categoria", "Média", "Mediana", "Mín", "Máx", "DP", "\\shortstack{Dificuldade\\\\(\\%)}"),
+      align = c("c", "c", "l", "r", "r", "r", "r", "r", "r"),
       caption = "Ranking geral de dificuldade dos subtestes do MACb",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 
@@ -70,17 +72,19 @@ kable(res$df_ranking[, c("Rank_Dificuldade", "Codigo", "Subteste", "Categoria", 
 A tabela abaixo exibe as estatísticas descritivas para os subtestes da aba *MACb Completo*:
 
 ```{r desc-completo}
-kable(res$desc_comp[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media", "Mediana", "Desvio_Padrao", "Minimo", "Maximo", "Pct_Acerto_Medio", "Pct_Dificuldade_Media")],
-      col.names = c("Código", "Subteste", "Máx", "Média", "Mediana", "DP", "Mín", "Máx", "% Acerto", "% Dif"),
+kable(res$desc_comp[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
+      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "\\shortstack{Dificuldade\\\\(\\%)}"),
+      align = c("c", "r", "r", "r", "r", "r", "r"),
       caption = "Estatística descritiva: MACb completo",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_macb_completo.png}
-\caption{MACb completo: porcentagem média de acerto por subteste}
+\caption{MACb completo: porcentagem média de dificuldade por subteste}
 \end{figure}
 
 ### Teste não paramétrico de Friedman (MACb completo)
@@ -95,6 +99,7 @@ kable(res$desc_comp[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media", "Med
 sig_comp <- res$res_f_comp$posthoc %>% filter(Significativo == TRUE)
 kable(sig_comp[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm")],
       col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado"),
+      align = c("l", "r", "r", "r", "r"),
       caption = "Comparações pareadas post-hoc significativas (MACb completo)",
       booktabs = TRUE,
       row.names = FALSE)
@@ -107,17 +112,19 @@ kable(sig_comp[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media
 Estatísticas descritivas para as tarefas de discurso narrativo:
 
 ```{r desc-narrativo}
-kable(res$desc_narrativo[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media", "Mediana", "Desvio_Padrao", "Minimo", "Maximo", "Pct_Acerto_Medio", "Pct_Dificuldade_Media")],
-      col.names = c("Código", "Subteste", "Máx", "Média", "Mediana", "DP", "Mín", "Máx", "% Acerto", "% Dif"),
+kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
+      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "\\shortstack{Dificuldade\\\\(\\%)}"),
+      align = c("c", "r", "r", "r", "r", "r", "r"),
       caption = "Estatística descritiva: discurso narrativo",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_discurso_narrativo.png}
-\caption{Desempenho no discurso narrativo (\% de acerto)}
+\caption{Desempenho no discurso narrativo (\% de dificuldade)}
 \end{figure}
 
 ### Teste não paramétrico de Friedman (discurso narrativo)
@@ -130,17 +137,19 @@ kable(res$desc_narrativo[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media",
 ## Discurso inicial
 
 ```{r desc-inicial}
-kable(res$desc_inicial[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media", "Mediana", "Desvio_Padrao", "Minimo", "Maximo", "Pct_Acerto_Medio", "Pct_Dificuldade_Media")],
-      col.names = c("Código", "Subteste", "Máx", "Média", "Mediana", "DP", "Mín", "Máx", "% Acerto", "% Dif"),
+kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
+      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "\\shortstack{Dificuldade\\\\(\\%)}"),
+      align = c("c", "r", "r", "r", "r", "r", "r"),
       caption = "Estatística descritiva: discurso inicial",
       booktabs = TRUE,
+      escape = FALSE,
       row.names = FALSE)
 ```
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_discurso_inicial.png}
-\caption{Desempenho no discurso inicial (\% de acerto)}
+\caption{Desempenho no discurso inicial (\% de dificuldade)}
 \end{figure}
 
 ## Fluência verbal livre (curva temporal)
@@ -148,6 +157,7 @@ kable(res$desc_inicial[, c("Codigo", "Subteste", "Pontuacão_Maxima", "Media", "
 ```{r desc-fluencia}
 kable(res$desc_fluencia,
       col.names = c("Intervalo", "Média", "Mediana", "DP", "Mín", "Máx", "Q1", "Q3"),
+      align = c("c", "r", "r", "r", "r", "r", "r", "r"),
       caption = "Estatística descritiva: fluência verbal livre por intervalo temporal",
       booktabs = TRUE,
       row.names = FALSE)
