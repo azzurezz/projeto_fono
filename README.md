@@ -1,10 +1,10 @@
 # Projeto Fono - Análise Estatística MACb
 
-Projeto de análise estatística descritiva e inferencial não paramétrica para dados quantitativos da **Bateria MACb (Bateria MAC Breve)** em Fonoaudiologia e Neuropsicologia ($N = 47$ participantes).
+Projeto de análise estatística descritiva e inferencial não paramétrica para dados quantitativos da **Bateria MACb** em Fonoaudiologia e Neuropsicologia ($N = 47$ participantes).
 
 ---
 
-## 📋 Objetivos do Projeto
+## Objetivos do Projeto
 
 1. **Estatística Descritiva Completa**: Cálculo de Média, Mediana, Desvio-Padrão, Valor Mínimo, Valor Máximo e Intervalos Interquartis (Q1 e Q3) para todos os subtestes e dimensões da bateria.
 2. **Avaliação de Dificuldade de Itens/Subtestes**: Identificação dos subtestes com maior e menor nível de dificuldade utilizando o **teste não paramétrico de Friedman** (para medidas repetidas) com tamanho de efeito (**W de Kendall**).
@@ -13,31 +13,7 @@ Projeto de análise estatística descritiva e inferencial não paramétrica para
 
 ---
 
-## 📊 Principais Resultados
-
-### Ranking Geral de Dificuldade dos Subtestes
-
-| Rank | Código | Subteste | Categoria | Média Obtida | Máximo | % Acerto Médio | % Dificuldade Média |
-| :---: | :---: | :--- | :--- | :---: | :---: | :---: | :---: |
-| **1** | `IP` | Ideias Principais | Discurso Narrativo | 5.30 | 18 | **29,43%** | **70,57%** |
-| **2** | `InfL` | Informações Lembradas | Discurso Narrativo | 7.85 | 26 | **30,19%** | **69,81%** |
-| **3** | `Infer` | Inferências (Sim/Não) | Discurso Narrativo | 0.36 | 1 | **36,17%** | **63,83%** |
-| **4** | `CompT` | Compreensão do Texto | Discurso Narrativo | 6.64 | 16 | **41,49%** | **58,51%** |
-| **5** | `IME` | Metáfora - Explicação | MACb Completo | 6.70 | 12 | **55,85%** | **44,15%** |
-| **6** | `PEP` | Prosódia Emocional - Produção | MACb Completo | 3.81 | 6 | **63,48%** | **36,52%** |
-| **7** | `JSe` | Julgamento Semântico - Explicação | MACb Completo | 3.91 | 6 | **65,25%** | **34,75%** |
-| **8** | `E` | Expressão | Discurso Inicial | 11.23 | 16 | **70,21%** | **29,79%** |
-| **9** | `IMA` | Metáfora - Alternativas | MACb Completo | 4.23 | 6 | **70,57%** | **29,43%** |
-| **10** | `ATe` | Atos de Fala - Explicação | MACb Completo | 8.64 | 12 | **71,99%** | **28,01%** |
-| **11** | `ATa` | Atos de Fala - Alternativas | MACb Completo | 4.85 | 6 | **80,85%** | **19,15%** |
-| **12** | `JSi` | Julgamento Semântico - Identificação | MACb Completo | 5.15 | 6 | **85,82%** | **14,18%** |
-| **13** | `PLE` | Prosódia Linguística Emocional | Discurso Inicial | 12.04 | 14 | **86,02%** | **13,98%** |
-| **14** | `C` | Compreensão | Discurso Inicial | 6.94 | 8 | **86,70%** | **13,30%** |
-| **15** | `CNV` | Comportamento Não Verbal | Discurso Inicial | 5.49 | 6 | **91,49%** | **8,51%** |
-
----
-
-## 📁 Estrutura do Repositório
+## Estrutura do Repositório
 
 ```text
 projeto_fono/
@@ -65,7 +41,7 @@ projeto_fono/
 
 ---
 
-## 🚀 Como Executar os Scripts
+## Como Executar os Scripts
 
 ### Pré-requisitos (Linguagem R)
 
@@ -90,11 +66,3 @@ Pacotes R necessários:
    ```
 
    *O arquivo `data/relatorio_estatistico_macb.pdf` será gerado automaticamente.*
-
-### Execução Alternativa via Python
-
-Se preferir utilizar Python (`pandas`, `scipy`, `statsmodels`, `seaborn`):
-
-```bash
-python3 src/analise_macb.py
-```
