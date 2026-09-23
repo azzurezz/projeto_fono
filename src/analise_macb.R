@@ -104,7 +104,7 @@ calc_descritiva <- function(df, subtests_list = NULL) {
 }
 
 # Função para Teste de Friedman e Post-Hoc
-executar_friedman_posthoc <- function(pct_df) {
+executar_friedman_posthoc <- function(pct_df, apenas_consecutivos = FALSE) {
   mat <- as.matrix(pct_df)
   f_test <- friedman.test(mat)
   N <- nrow(mat)
@@ -114,10 +114,11 @@ executar_friedman_posthoc <- function(pct_df) {
   cols <- colnames(pct_df)
   pairs_list <- list()
   idx <- 1
-  for (i in 1:(length(cols) - 1)) {
-    for (j in (i + 1):length(cols)) {
+  
+  if (apenas_consecutivos) {
+    for (i in 1:(length(cols) - 1)) {
       c1 <- cols[i]
-      c2 <- cols[j]
+      c2 <- cols[i + 1]
       w_test <- suppressWarnings(wilcox.test(pct_df[[c1]], pct_df[[c2]], paired = TRUE))
       m1 <- mean(pct_df[[c1]], na.rm = TRUE)
       m2 <- mean(pct_df[[c2]], na.rm = TRUE)
@@ -131,7 +132,27 @@ executar_friedman_posthoc <- function(pct_df) {
       )
       idx <- idx + 1
     }
+  } else {
+    for (i in 1:(length(cols) - 1)) {
+      for (j in (i + 1):length(cols)) {
+        c1 <- cols[i]
+        c2 <- cols[j]
+        w_test <- suppressWarnings(wilcox.test(pct_df[[c1]], pct_df[[c2]], paired = TRUE))
+        m1 <- mean(pct_df[[c1]], na.rm = TRUE)
+        m2 <- mean(pct_df[[c2]], na.rm = TRUE)
+        pairs_list[[idx]] <- data.frame(
+          Par = paste(c1, "-", c2),
+          Media_Tarefa1 = round(m1, 2),
+          Media_Tarefa2 = round(m2, 2),
+          Diferenca_Media = round(m1 - m2, 2),
+          p_num = w_test$p.value,
+          stringsAsFactors = FALSE
+        )
+        idx <- idx + 1
+      }
+    }
   }
+  
   posthoc_df <- bind_rows(pairs_list)
   posthoc_df$Significativo <- posthoc_df$p_num < 0.05
   posthoc_df$Resultado <- ifelse(posthoc_df$Significativo, "Significativo", "Não significativo")
@@ -173,7 +194,7 @@ res_f_inic  <- executar_friedman_posthoc(pct_inic)
 res_f_narr  <- executar_friedman_posthoc(pct_narr)
 
 fv_cols     <- c("0-30", "30-60", "60-90", "90-120", "120-150")
-res_f_fluen <- executar_friedman_posthoc(df_fluencia[fv_cols])
+res_f_fluen <- executar_friedman_posthoc(df_fluencia[fv_cols], apenas_consecutivos = TRUE)
 
 # 4. Ranking Geral de Dificuldade
 all_subtests <- list()

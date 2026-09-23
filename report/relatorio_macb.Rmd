@@ -37,10 +37,30 @@ res <- readRDS("../data/results/resultados_macb.rds")
 Este relatório apresenta os resultados da análise estatística descritiva (Média, Mediana, Desvio-Padrão, Mínimo e Máximo) e a avaliação não paramétrica de dificuldade das tarefas dos testes MACb, aplicada a uma amostra de $N = 47$ participantes.
 
 ## Métodos estatísticos aplicados
+
 1. **Estatística descritiva**: Para cada tarefa, foram calculadas as métricas de tendência central (Média, Mediana), dispersão (Desvio-Padrão, Intervalo Interquartil Q1–Q3) e amplitude (Mínimo, Máximo).
-2. **Normalização de escalas**: Como as tarefas possuem tetos de pontuação distintos (ex: IME máx = 12, JSi máx = 6, IP máx = 18), calculou-se o percentual de acerto médio em relação ao valor teto ($\% \text{Acerto} = \frac{\text{Pontuação Obtida}}{\text{Pontuação Máxima}} \times 100\%$). A dificuldade é dada pelo complementar ($\% \text{Dificuldade} = 100\% - \% \text{Acerto}$).
-3. **Teste não paramétrico de Friedman**: Utilizado para determinar se existem diferenças estatisticamente significativas na dificuldade entre as tarefas de medidas repetidas. O tamanho do efeito foi estimado via W de Kendall.
-4. **Análise post-hoc pareada**: Testes pareados de Wilcoxon (p-valores sem ajuste) para comparações múltiplas.
+
+2. **Normalização de escalas**: Como as tarefas possuem tetos de pontuação distintos (ex: IME máx = 12, JSi máx = 6, IP máx = 18), calculou-se o percentual de acerto e de dificuldade por tarefa:
+   $$\% \text{Acerto} = \left(\frac{\text{Pontuação Obtida}}{\text{Pontuação Máxima}}\right) \times 100\%$$
+   $$\% \text{Dificuldade} = 100\% - \% \text{Acerto}$$
+
+3. **Teste não paramétrico de Friedman**: Utilizado para determinar se existem diferenças estatisticamente significativas na dificuldade entre tarefas de medidas repetidas no mesmo indivíduo. A estatística de teste $\chi^2_F$ é dada por:
+   $$\chi^2_F = \frac{12}{N k (k+1)} \sum_{j=1}^{k} R_j^2 - 3 N (k+1)$$
+   onde $N = 47$ é o tamanho da amostra, $k$ é a quantidade de tarefas comparadas e $R_j$ é a soma dos postos (*ranks*) da tarefa $j$. O tamanho do efeito é estimado pelo $W$ de Kendall:
+   $$W = \frac{\chi^2_F}{N(k-1)}$$
+   *Interpretação do $W$ de Kendall*: $W < 0{,}10$ (efeito pequeno/desprezível), $0{,}10 \le W < 0{,}30$ (efeito moderado), $W \ge 0{,}30$ (efeito forte).
+
+4. **Análise post-hoc pareada de Wilcoxon**: Para identificar quais pares de tarefas específicas apresentam diferenças significativamente distintas, utilizou-se o teste de postos sinalizados de Wilcoxon para amostras pareadas:
+   $$W^+ = \sum_{i=1}^{n} \text{rank}(|d_i|) \cdot I(d_i > 0)$$
+   onde $d_i = x_{1,i} - x_{2,i}$ é a diferença de pontuação do participante $i$ entre duas tarefas.
+
+### Interpretação dos $p$-valores
+
+Neste relatório, todos os $p$-valores são apresentados em formato decimal direto com 5 casas decimais e interpretados com base no nível de significância padrão $\alpha = 0{,}05$:
+
+- **$p < 0{,}05$ (Significativo)**: A probabilidade de a diferença observada ocorrer por acaso é menor que 5\%. Rejeita-se a hipótese nula $H_0$ e conclui-se que há diferença estatisticamente significativa entre as tarefas.
+
+- **$p \ge 0{,}05$ (Não significativo)**: Não há evidência estatística suficiente para rejeitar $H_0$ ao nível de 5\%. Valores entre $0{,}05$ e $0{,}10$ indicam uma tendência estatística marginal, refletindo proximidade ou homogeneidade de desempenho entre as tarefas.
 
 ---
 
@@ -79,6 +99,8 @@ kable(res$df_ranking[, c("Codigo", "Categoria", "Media", "Mediana", "Minimo", "M
 \includegraphics[width=0.95\textwidth]{../data/plots/ranking_geral_dificuldade.png}
 \caption{Ranking geral de dificuldade do MACb (\% de erro médio por tarefa)}
 \end{figure}
+
+**Descrição dos resultados do ranking geral**: As tarefas com maior nível de dificuldade média para a amostra foram IP (*Ideias Principais*, 70,57% de erro) e InfL (*Informações Lembradas*, 69,80%), seguidas por PEP (*Prosódia Emocional - Produção*, 63,48%) e ATe (*Atos de Fala - Explicação*, 71,99%). Em contrapartida, as tarefas com menor dificuldade foram JSi (*Julgamento Semântico - Identificação*, 14,18% de erro) e ATa (*Atos de Fala - Alternativas*, 19,15%), demonstrando uma amplitude acentuada de exigência cognitiva entre as tarefas dos testes MACb.
 
 
 
@@ -135,6 +157,8 @@ kable(res$res_f_comp$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Difer
       row.names = FALSE)
 ```
 
+**Descrição dos resultados (MACb completo)**: O teste de Friedman revelou uma diferença global altamente significativa entre as tarefas do MACb completo ($\chi^2 = 61{,}9466$, $p = 0{,}00000$, $W = 0{,}2197$). As comparações pareadas de Wilcoxon confirmaram diferenças estatisticamente significativas ($p < 0{,}05$) na maioria das combinações, destacando que tarefas de explicação conceitual (ex: IME) apresentam dificuldade significativamente superior a tarefas de múltipla escolha/alternativas (ex: IMA e ATa).
+
 
 ## Discurso narrativo
 
@@ -187,6 +211,8 @@ kable(res$res_f_narr$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Difer
       row.names = FALSE)
 ```
 
+**Descrição dos resultados (Discurso narrativo)**: O teste de Friedman para o discurso narrativo não alcançou significância estatística estrita ao nível de 5% ($\chi^2 = 7{,}1719$, $p = 0{,}06662$, $W = 0{,}0509$), refletindo um perfil de dificuldade homogêneo entre as 4 sub-dimensões narrativas. O valor de $p = 0{,}06662$ representa uma tendência estatística marginal, impulsionada principalmente pela diferença entre a tarefa de maior erro (IP, 70,57%) e a de menor erro (CompT, 58,51%, $p = 0{,}00352$).
+
 
 ## Discurso inicial
 
@@ -237,6 +263,8 @@ kable(res$res_f_inic$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Difer
       row.names = FALSE)
 ```
 
+**Descrição dos resultados (Discurso inicial)**: O teste de Friedman indicou variabilidade estatisticamente relevante entre as tarefas de discurso inicial ($\chi^2 = 55{,}2225$, $p = 0{,}00000$, $W = 0{,}3916$), evidenciando um tamanho de efeito forte. As comparações pareadas mostram divergências significativas de desempenho entre os sub-domínios expressivos e não verbais.
+
 
 ## Fluência verbal livre (curva temporal)
 
@@ -275,15 +303,17 @@ kable(f_fluen_tbl,
       row.names = FALSE)
 ```
 
-### Comparações pareadas post-hoc (Wilcoxon)
+### Comparações pareadas post-hoc de intervalos consecutivos (Wilcoxon)
 
 ```{r posthoc-fluencia}
 kable(res$res_f_fluen$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_bruto", "Resultado")],
-      col.names = c("Comparação", "Média 1", "Média 2", "Diferença", "p-valor", "Resultado"),
+      col.names = c("Intervalos Consecutivos", "Média 1", "Média 2", "Diferença", "p-valor", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
-      caption = "Comparações pareadas post-hoc (fluência verbal)",
+      caption = "Comparações pareadas post-hoc de intervalos consecutivos (fluência verbal)",
       booktabs = TRUE,
       escape = FALSE,
       row.names = FALSE)
 ```
+
+**Descrição dos resultados (Fluência verbal)**: O teste de Friedman confirmou um efeito temporal global altamente significativo na evocações lexicais ($\chi^2 = 68{,}2267$, $p = 0{,}00000$, $W = 0{,}3629$). O teste de Wilcoxon para intervalos consecutivos demonstrou uma queda média substancial e significativa nos dois primeiros blocos de 30 segundos (0–30s vs 30–60s, $p = 0{,}00000$; e 30–60s vs 60–90s, $p = 0{,}00371$), seguida de estabilização (platô) do desempenho a partir dos 60 segundos (60–90s vs 90–120s, $p = 0{,}70947$).
 
