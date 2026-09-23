@@ -34,11 +34,11 @@ res <- readRDS("../data/results/resultados_macb.rds")
 
 # Resumo e metodologia
 
-Este relatório apresenta os resultados da análise estatística descritiva (Média, Mediana, Desvio-Padrão, Mínimo e Máximo) e a avaliação não paramétrica de dificuldade dos itens/subtestes da Bateria MACb, aplicada a uma amostra de $N = 47$ participantes.
+Este relatório apresenta os resultados da análise estatística descritiva (Média, Mediana, Desvio-Padrão, Mínimo e Máximo) e a avaliação não paramétrica de dificuldade das tarefas dos testes MACb, aplicada a uma amostra de $N = 47$ participantes.
 
 ## Métodos estatísticos aplicados
-1. **Estatística descritiva**: Para cada subteste, foram calculadas as métricas de tendência central (Média, Mediana), dispersão (Desvio-Padrão, Intervalo Interquartil Q1–Q3) e amplitude (Mínimo, Máximo).
-2. **Normalização de escalas**: Como os subtestes possuem tetos de pontuação distintos (ex: IME máx = 12, JSi máx = 6, IP máx = 18), calculou-se o percentual de acerto médio em relação ao valor teto ($\% \text{Acerto} = \frac{\text{Pontuação Obtida}}{\text{Pontuação Máxima}} \times 100\%$). A dificuldade é dada pelo complementar ($\% \text{Dificuldade} = 100\% - \% \text{Acerto}$).
+1. **Estatística descritiva**: Para cada tarefa, foram calculadas as métricas de tendência central (Média, Mediana), dispersão (Desvio-Padrão, Intervalo Interquartil Q1–Q3) e amplitude (Mínimo, Máximo).
+2. **Normalização de escalas**: Como as tarefas possuem tetos de pontuação distintos (ex: IME máx = 12, JSi máx = 6, IP máx = 18), calculou-se o percentual de acerto médio em relação ao valor teto ($\% \text{Acerto} = \frac{\text{Pontuação Obtida}}{\text{Pontuação Máxima}} \times 100\%$). A dificuldade é dada pelo complementar ($\% \text{Dificuldade} = 100\% - \% \text{Acerto}$).
 3. **Teste não paramétrico de Friedman**: Utilizado para determinar se existem diferenças estatisticamente significativas na dificuldade entre as tarefas de medidas repetidas. O tamanho do efeito foi estimado via W de Kendall.
 4. **Análise post-hoc pareada**: Testes pareados de Wilcoxon com ajuste de Holm-Bonferroni para comparações múltiplas.
 
@@ -46,13 +46,13 @@ Este relatório apresenta os resultados da análise estatística descritiva (Mé
 
 # Ranking geral de dificuldade das tarefas MACb
 
-A tabela e o gráfico a seguir ordenam as tarefas da bateria MACb da mais difícil (maior taxa de erro/dificuldade) para a mais fácil (maior taxa de acerto):
+A tabela e o gráfico a seguir ordenam as tarefas dos testes MACb da mais difícil (maior taxa de erro/dificuldade) para a mais fácil (maior taxa de acerto):
 
 ```{r ranking-tabela}
 kable(res$df_ranking[, c("Codigo", "Categoria", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
-      col.names = c("Subteste", "Categoria", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade~(%)"),
+      col.names = c("Tarefa", "Categoria", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade (%)"),
       align = c("l", "l", "c", "c", "c", "c", "c", "c"),
-      caption = "Ranking geral de dificuldade dos subtestes do MACb",
+      caption = "Ranking geral de dificuldade das tarefas do MACb",
       booktabs = TRUE,
       escape = FALSE,
       row.names = FALSE)
@@ -68,13 +68,13 @@ kable(res$df_ranking[, c("Codigo", "Categoria", "Media", "Mediana", "Minimo", "M
 
 # Análise estatística por bloco funcional
 
-## MACb completo (subtestes principais)
+## MACb completo (tarefas principais)
 
-A tabela abaixo exibe as estatísticas descritivas para os subtestes da aba *MACb Completo*:
+A tabela abaixo exibe as estatísticas descritivas para as tarefas da aba *MACb Completo*:
 
 ```{r desc-completo}
 kable(res$desc_comp[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
-      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade~(%)"),
+      col.names = c("Tarefa", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade (%)"),
       align = c("l", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva: MACb completo",
       booktabs = TRUE,
@@ -85,7 +85,7 @@ kable(res$desc_comp[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvi
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_macb_completo.png}
-\caption{MACb completo: porcentagem média de dificuldade por subteste}
+\caption{MACb completo: porcentagem média de dificuldade por tarefa}
 \end{figure}
 
 ### Teste não paramétrico de Friedman (MACb completo)
@@ -97,8 +97,8 @@ kable(res$desc_comp[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvi
 ### Comparações pareadas post-hoc (Holm-Bonferroni)
 
 ```{r posthoc-completo}
-kable(res$res_f_comp$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Comparação", "Subteste~1~(%)", "Subteste~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
+kable(res$res_f_comp$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
+      col.names = c("Comparação", "Tarefa~1~(%)", "Tarefa~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (MACb completo)",
       booktabs = TRUE,
@@ -113,7 +113,7 @@ Estatísticas descritivas para as tarefas de discurso narrativo:
 
 ```{r desc-narrativo}
 kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
-      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade~(%)"),
+      col.names = c("Tarefa", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade (%)"),
       align = c("l", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva: discurso narrativo",
       booktabs = TRUE,
@@ -124,7 +124,7 @@ kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_discurso_narrativo.png}
-\caption{MACb discurso narrativo: porcentagem média de dificuldade por subteste}
+\caption{MACb discurso narrativo: porcentagem média de dificuldade por tarefa}
 \end{figure}
 
 ### Teste não paramétrico de Friedman (discurso narrativo)
@@ -135,8 +135,8 @@ kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "
 ### Comparações pareadas post-hoc (Holm-Bonferroni)
 
 ```{r posthoc-narrativo}
-kable(res$res_f_narr$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Comparação", "Subteste~1~(%)", "Subteste~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
+kable(res$res_f_narr$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
+      col.names = c("Comparação", "Tarefa~1~(%)", "Tarefa~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (discurso narrativo)",
       booktabs = TRUE,
@@ -149,7 +149,7 @@ kable(res$res_f_narr$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "D
 
 ```{r desc-inicial}
 kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvio_Padrao", "Pct_Dificuldade_Media")],
-      col.names = c("Subteste", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade~(%)"),
+      col.names = c("Tarefa", "Média", "Mediana", "Mín", "Máx", "DP", "Dificuldade (%)"),
       align = c("l", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva: discurso inicial",
       booktabs = TRUE,
@@ -160,7 +160,7 @@ kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "De
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{../data/plots/dificuldade_discurso_inicial.png}
-\caption{MACb discurso inicial: porcentagem média de dificuldade por subteste}
+\caption{MACb discurso inicial: porcentagem média de dificuldade por tarefa}
 \end{figure}
 
 ### Teste não paramétrico de Friedman (discurso inicial)
@@ -171,8 +171,8 @@ kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "De
 ### Comparações pareadas post-hoc (Holm-Bonferroni)
 
 ```{r posthoc-inicial}
-kable(res$res_f_inic$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
-      col.names = c("Comparação", "Subteste~1~(%)", "Subteste~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
+kable(res$res_f_inic$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
+      col.names = c("Comparação", "Tarefa~1~(%)", "Tarefa~2~(%)", "Diferença~(%)", "p-valor~ajustado", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (discurso inicial)",
       booktabs = TRUE,
@@ -207,7 +207,7 @@ kable(res$desc_fluencia,
 ### Comparações pareadas post-hoc (Holm-Bonferroni)
 
 ```{r posthoc-fluencia}
-kable(res$res_f_fluen$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
+kable(res$res_f_fluen$posthoc[, c("Par", "Media_Tarefa1", "Media_Tarefa2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
       col.names = c("Comparação", "Média~1", "Média~2", "Diferença", "p-valor~ajustado", "Resultado"),
       align = c("l", "c", "c", "c", "c", "c"),
       caption = "Comparações pareadas post-hoc (fluência verbal)",

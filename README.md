@@ -1,14 +1,14 @@
 # Projeto Fono - Análise Estatística MACb
 
-Projeto de análise estatística descritiva e inferencial não paramétrica para dados quantitativos da Bateria MACb em Fonoaudiologia e Neuropsicologia ($N = 47$ participantes).
+Projeto de análise estatística descritiva e inferencial não paramétrica para dados quantitativos dos testes MACb em Fonoaudiologia e Neuropsicologia ($N = 47$ participantes).
 
 ---
 
 ## Objetivos do Projeto
 
-1. **Estatística Descritiva Completa**: Cálculo de Média, Mediana, Desvio-Padrão, Valor Mínimo, Valor Máximo e Intervalos Interquartis (Q1 e Q3) para todos os subtestes e dimensões da bateria.
-2. **Avaliação de Dificuldade de Itens/Subtestes**: Identificação dos subtestes com maior e menor nível de dificuldade utilizando o **teste não paramétrico de Friedman** (para medidas repetidas) com tamanho de efeito (**W de Kendall**).
-3. **Análise Post-Hoc**: Testes pareados de Wilcoxon com correção de **Holm-Bonferroni** para determinar quais pares de subtestes possuem diferenças significativas de desempenho.
+1. **Estatística Descritiva Completa**: Cálculo de Média, Mediana, Desvio-Padrão, Valor Mínimo, Valor Máximo e Intervalos Interquartis (Q1 e Q3) para todas as tarefas e dimensões dos testes.
+2. **Avaliação de Dificuldade das Tarefas**: Identificação das tarefas com maior e menor nível de dificuldade utilizando o **teste não paramétrico de Friedman** (para medidas repetidas) com tamanho de efeito (**W de Kendall**).
+3. **Análise Post-Hoc**: Testes pareados de Wilcoxon com correção de **Holm-Bonferroni** para determinar quais pares de tarefas possuem diferenças significativas de desempenho.
 4. **Relatório Profissional em PDF**: Automação da compilação de relatórios formatados em PDF via R Markdown e LaTeX.
 
 ---

@@ -23,7 +23,7 @@ RESULTS_DIR <- "data/results"
 dir.create(PLOTS_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(RESULTS_DIR, recursive = TRUE, showWarnings = FALSE)
 
-# Definição dos subtestes e tetos máximos
+# Definição das tarefas e tetos máximos
 SUBTESTS_COMPLETO <- list(
   IME = list(o = "IME o", m = "IME m", name = "Interpretação de Metáfora - Explicação"),
   IMA = list(o = "IMA o", m = "lMA m", name = "Interpretação de Metáfora - Alternativas"),
@@ -68,7 +68,7 @@ calc_descritiva <- function(df, subtests_list = NULL) {
       
       data.frame(
         Codigo = code,
-        Subteste = info$name,
+        Tarefa = info$name,
         Pontuacão_Maxima = teto,
         Media = round(mean_val, 2),
         Mediana = round(med_val, 2),
@@ -123,8 +123,8 @@ executar_friedman_posthoc <- function(pct_df) {
       m2 <- mean(pct_df[[c2]], na.rm = TRUE)
       pairs_list[[idx]] <- data.frame(
         Par = paste(c1, "-", c2),
-        Media_Subteste1 = round(m1, 2),
-        Media_Subteste2 = round(m2, 2),
+        Media_Tarefa1 = round(m1, 2),
+        Media_Tarefa2 = round(m2, 2),
         Diferenca_Media = round(m1 - m2, 2),
         p_bruto = w_test$p.value,
         stringsAsFactors = FALSE
@@ -188,7 +188,7 @@ for (grp in list(list(sub = SUBTESTS_COMPLETO, df = df_comp, cat = "MACb Complet
     vec_o <- grp$df[[info$o]]
     all_subtests[[idx]] <- data.frame(
       Codigo = code,
-      Subteste = paste0(info$name, " (", code, ")"),
+      Tarefa = paste0(info$name, " (", code, ")"),
       Categoria = grp$cat,
       Media = round(mean(vec_o, na.rm = TRUE), 2),
       Mediana = round(median(vec_o, na.rm = TRUE), 2),
@@ -230,9 +230,9 @@ p1 <- ggplot(p1_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Difi
   geom_col(width = 0.7, fill = LIGHT_GRAY, show.legend = FALSE) +
   geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#1F2937") +
   coord_flip(ylim = c(0, 105)) +
-  labs(title = "MACb completo: porcentagem média de dificuldade por subteste",
-       subtitle = "Subtestes principais normalizados pelo valor máximo",
-       x = "Subteste", y = "Dificuldade média (%)") +
+  labs(title = "MACb completo: porcentagem média de dificuldade por tarefa",
+       subtitle = "Tarefas principais normalizadas pelo valor máximo",
+       x = "Tarefa", y = "Dificuldade média (%)") +
   theme_custom
 
 ggsave(file.path(PLOTS_DIR, "dificuldade_macb_completo.png"), plot = p1, width = 8, height = 5, dpi = 300)
@@ -243,9 +243,9 @@ p2 <- ggplot(p2_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Difi
   geom_col(width = 0.7, fill = LIGHT_GRAY, show.legend = FALSE) +
   geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#1F2937") +
   coord_flip(ylim = c(0, 105)) +
-  labs(title = "MACb discurso narrativo: porcentagem média de dificuldade por subteste",
+  labs(title = "MACb discurso narrativo: porcentagem média de dificuldade por tarefa",
        subtitle = "Sub-dimensões de discurso narrativo normalizadas pelo valor máximo",
-       x = "Subteste", y = "Dificuldade média (%)") +
+       x = "Tarefa", y = "Dificuldade média (%)") +
   theme_custom
 
 ggsave(file.path(PLOTS_DIR, "dificuldade_discurso_narrativo.png"), plot = p2, width = 8, height = 4.5, dpi = 300)
@@ -256,9 +256,9 @@ p3 <- ggplot(p3_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Difi
   geom_col(width = 0.7, fill = LIGHT_GRAY, show.legend = FALSE) +
   geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.8, color = "#1F2937") +
   coord_flip(ylim = c(0, 105)) +
-  labs(title = "MACb discurso inicial: porcentagem média de dificuldade por subteste",
+  labs(title = "MACb discurso inicial: porcentagem média de dificuldade por tarefa",
        subtitle = "Sub-dimensões de discurso inicial normalizadas pelo valor máximo",
-       x = "Subteste", y = "Dificuldade média (%)") +
+       x = "Tarefa", y = "Dificuldade média (%)") +
   theme_custom
 
 ggsave(file.path(PLOTS_DIR, "dificuldade_discurso_inicial.png"), plot = p3, width = 8, height = 4.5, dpi = 300)
@@ -307,7 +307,7 @@ p5 <- ggplot(p5_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Difi
   ) +
   labs(title = "Ranking geral de dificuldade das tarefas do MACb",
        subtitle = "Porcentagem média de erro/dificuldade por tarefa",
-       x = "Subteste", y = "Dificuldade média (%)") +
+       x = "Tarefa", y = "Dificuldade média (%)") +
   theme_custom +
   theme(legend.position = "bottom", legend.title = element_text(face = "bold"))
 
