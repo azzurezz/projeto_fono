@@ -133,10 +133,11 @@ executar_friedman_posthoc <- function(pct_df) {
     }
   }
   posthoc_df <- bind_rows(pairs_list)
-  posthoc_df$p_ajustado_Holm <- p.adjust(posthoc_df$p_bruto, method = "holm")
-  posthoc_df$Significativo <- posthoc_df$p_ajustado_Holm < 0.05
+  p_adj <- p.adjust(posthoc_df$p_bruto, method = "holm")
+  posthoc_df$Significativo <- p_adj < 0.05
+  posthoc_df$Resultado <- ifelse(posthoc_df$Significativo, "Significativo", "Não significativo")
   posthoc_df$p_bruto <- formatC(posthoc_df$p_bruto, format = "e", digits = 3)
-  posthoc_df$p_ajustado_Holm <- formatC(posthoc_df$p_ajustado_Holm, format = "e", digits = 3)
+  posthoc_df$p_ajustado_Holm <- formatC(p_adj, format = "e", digits = 3)
   
   list(
     chi2 = as.numeric(f_test$statistic),
@@ -286,14 +287,16 @@ ggsave(file.path(PLOTS_DIR, "curva_fluencia_verbal.png"), plot = p4, width = 8, 
 
 # 5. Ranking Geral de Dificuldade
 p5_df <- df_ranking %>% arrange(Pct_Dificuldade_Media)
-p5 <- ggplot(p5_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Dificuldade_Media)) +
-  geom_col(width = 0.7, fill = LIGHT_GRAY, show.legend = FALSE) +
+p5 <- ggplot(p5_df, aes(x = reorder(Codigo, Pct_Dificuldade_Media), y = Pct_Dificuldade_Media, fill = Categoria)) +
+  geom_col(width = 0.7) +
   geom_text(aes(label = paste0(Pct_Dificuldade_Media, "%")), hjust = -0.15, fontface = "bold", size = 3.5, color = "#1F2937") +
   coord_flip(ylim = c(0, 105)) +
+  scale_fill_manual(values = c("MACb Completo" = "#4B5563", "Discurso Narrativo" = "#71717A", "Discurso Inicial" = "#A1A1AA"), name = "Categoria") +
   labs(title = "Ranking geral de dificuldade das tarefas do MACb",
        subtitle = "Porcentagem média de erro/dificuldade por tarefa",
        x = "Subteste", y = "Dificuldade média (%)") +
-  theme_custom
+  theme_custom +
+  theme(legend.position = "bottom", legend.title = element_text(face = "bold"))
 
 ggsave(file.path(PLOTS_DIR, "ranking_geral_dificuldade.png"), plot = p5, width = 9, height = 7, dpi = 300)
 

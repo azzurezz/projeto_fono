@@ -1,8 +1,6 @@
 ---
 title: "Relatório - análise estatística descritiva e dificuldade de itens"
-subtitle: "TCC em fonoaudiologia"
 author: "Por: Azzure Alves do Carmo"
-date: "`r Sys.Date()`"
 output: 
   pdf_document:
     number_sections: true
@@ -63,7 +61,7 @@ kable(res$df_ranking[, c("Codigo", "Categoria", "Media", "Mediana", "Minimo", "M
 \caption{Ranking geral de dificuldade do MACb (\% de erro médio por tarefa)}
 \end{figure}
 
-\newpage
+
 
 # Análise estatística por bloco funcional
 
@@ -93,19 +91,17 @@ kable(res$desc_comp[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "Desvi
 - **p-valor**: `r formatC(res$res_f_comp$p_value, format="e", digits=3)` (Diferença altamente significativa, $p < 0{,}001$)
 - **Tamanho do efeito (Kendall's W)**: `r round(res$res_f_comp$kendall_w, 4)`
 
-### Comparações pareadas significativas (Holm-Bonferroni)
+### Comparações pareadas post-hoc (Holm-Bonferroni)
 
 ```{r posthoc-completo}
-sig_comp <- res$res_f_comp$posthoc %>% filter(Significativo == TRUE)
-kable(sig_comp[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm")],
-      col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado"),
-      align = c("l", "c", "c", "c", "c"),
-      caption = "Comparações pareadas post-hoc significativas (MACb completo)",
+kable(res$res_f_comp$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
+      col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado", "Resultado"),
+      align = c("l", "c", "c", "c", "c", "c"),
+      caption = "Comparações pareadas post-hoc (MACb completo)",
       booktabs = TRUE,
       row.names = FALSE)
 ```
 
-\newpage
 
 ## Discurso narrativo
 
@@ -132,7 +128,17 @@ kable(res$desc_narrativo[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "
 - **p-valor**: `r formatC(res$res_f_narr$p_value, format="e", digits=3)`
 - **Kendall's W**: `r round(res$res_f_narr$kendall_w, 4)`
 
-\newpage
+### Comparações pareadas post-hoc (Holm-Bonferroni)
+
+```{r posthoc-narrativo}
+kable(res$res_f_narr$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
+      col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado", "Resultado"),
+      align = c("l", "c", "c", "c", "c", "c"),
+      caption = "Comparações pareadas post-hoc (discurso narrativo)",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
 
 ## Discurso inicial
 
@@ -152,6 +158,23 @@ kable(res$desc_inicial[, c("Codigo", "Media", "Mediana", "Minimo", "Maximo", "De
 \caption{MACb discurso inicial: porcentagem média de dificuldade por subteste}
 \end{figure}
 
+### Teste não paramétrico de Friedman (discurso inicial)
+- **Estatística $\chi^2$**: `r round(res$res_f_inic$chi2, 4)`
+- **p-valor**: `r formatC(res$res_f_inic$p_value, format="e", digits=3)`
+- **Kendall's W**: `r round(res$res_f_inic$kendall_w, 4)`
+
+### Comparações pareadas post-hoc (Holm-Bonferroni)
+
+```{r posthoc-inicial}
+kable(res$res_f_inic$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
+      col.names = c("Par comparado", "Subteste 1 (%)", "Subteste 2 (%)", "Diferença (%)", "p-valor ajustado", "Resultado"),
+      align = c("l", "c", "c", "c", "c", "c"),
+      caption = "Comparações pareadas post-hoc (discurso inicial)",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
+
 ## Fluência verbal livre (curva temporal)
 
 ```{r desc-fluencia}
@@ -168,3 +191,20 @@ kable(res$desc_fluencia,
 \includegraphics[width=0.85\textwidth]{../data/plots/curva_fluencia_verbal.png}
 \caption{Curva temporal da fluência verbal livre (palavras por intervalo)}
 \end{figure}
+
+### Teste não paramétrico de Friedman (fluência verbal)
+- **Estatística $\chi^2$**: `r round(res$res_f_fluen$chi2, 4)`
+- **p-valor**: `r formatC(res$res_f_fluen$p_value, format="e", digits=3)`
+- **Kendall's W**: `r round(res$res_f_fluen$kendall_w, 4)`
+
+### Comparações pareadas post-hoc (Holm-Bonferroni)
+
+```{r posthoc-fluencia}
+kable(res$res_f_fluen$posthoc[, c("Par", "Media_Subteste1", "Media_Subteste2", "Diferenca_Media", "p_ajustado_Holm", "Resultado")],
+      col.names = c("Intervalos comparados", "Média 1", "Média 2", "Diferença", "p-valor ajustado", "Resultado"),
+      align = c("l", "c", "c", "c", "c", "c"),
+      caption = "Comparações pareadas post-hoc (fluência verbal)",
+      booktabs = TRUE,
+      row.names = FALSE)
+```
+
