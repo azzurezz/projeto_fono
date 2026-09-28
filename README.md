@@ -1,3 +1,4 @@
+
 # Projeto Fono - Análise Estatística MACb
 
 Projeto de análise estatística descritiva e inferencial não paramétrica para dados quantitativos dos testes MACb em Fonoaudiologia e Neuropsicologia ($N = 47$ participantes).
@@ -18,21 +19,21 @@ Projeto de análise estatística descritiva e inferencial não paramétrica para
 ```text
 projeto_fono/
 ├── data/
-│   ├── Tabulação MACb - quantitativo reformulada.xlsx   # Dados brutos em Excel
-│   ├── relatorio_macb.pdf                               # Relatório final único em PDF
+│   ├── Tabulação MACb - quantitativo reformulada.xlsx   # Dados brutos em Excel (amostra geral)
+│   ├── MACB_escolaridade_corte.xlsx                     # Dados com escolaridade e corte
+│   ├── relatorio_macb.pdf                               # Relatório final geral em PDF
+│   ├── relatorio_macb_escolaridade.pdf                  # Relatório de escolaridade e corte em PDF
 │   ├── plots/                                           # Gráficos de alta resolução (ggplot2)
-│   │   ├── ranking_geral_dificuldade.png
-│   │   ├── dificuldade_macb_completo.png
-│   │   ├── dificuldade_discurso_narrativo.png
-│   │   ├── dificuldade_discurso_inicial.png
-│   │   └── curva_fluencia_verbal.png
+│   │   └── escolaridade/                                # Boxplots por escolaridade com corte
 │   └── results/                                         # Resultados numéricos exportados (RDS)
-│       └── resultados_macb.rds
+│       ├── resultados_macb.rds
+│       └── resultados_macb_escolaridade.rds
 ├── report/
-│   └── relatorio_macb.Rmd                               # Template R Markdown para PDF
+│   ├── relatorio_macb.Rmd                               # Template R Markdown geral
+│   └── relatorio_macb_escolaridade.Rmd                  # Template R Markdown por escolaridade
 ├── src/
-│   ├── analise_macb.R                                   # Script principal de análise em R
-│   └── gerar_relatorio_pdf.R                            # Script de geração do PDF
+│   ├── analise_macb.R                                   # Script principal de análise geral
+│   └── analise_macb_escolaridade.R                      # Script de análise por escolaridade
 └── README.md
 ```
 
@@ -50,16 +51,17 @@ Pacotes R necessários:
 
 ### Execução via R
 
-1. **Executar a análise de dados e gerar os gráficos:**
+1. **Executar a análise de dados geral:**
 
    ```bash
    Rscript src/analise_macb.R
    ```
 
-2. **Compilar o relatório em PDF único:**
+2. **Executar a análise por escolaridade e pontos de corte:**
 
    ```bash
-   Rscript src/gerar_relatorio_pdf.R
+   Rscript src/analise_macb_escolaridade.R
+   Rscript -e "rmarkdown::render('report/relatorio_macb_escolaridade.Rmd', output_file = '../data/relatorio_macb_escolaridade.pdf')"
    ```
 
-   *O arquivo único `data/relatorio_macb.pdf` será gerado automaticamente.*
+   *Os relatórios em PDF `data/relatorio_macb.pdf` e `data/relatorio_macb_escolaridade.pdf` serão gerados na pasta `data/`.*

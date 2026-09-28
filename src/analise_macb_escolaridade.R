@@ -220,53 +220,151 @@ run_fisher <- function(data, code = "Infer") {
   )
 }
 
+# Converter dados em formato longo para boxplots
+extract_long_data <- function(data, subtests_def) {
+  rows <- list()
+  idx <- 1
+  for (st in subtests_def) {
+    o_col <- paste0(st$code, "_o")
+    corte_col <- paste0(st$code, "_corte")
+    if (!o_col %in% names(data)) next
+
+    for (i in 1:nrow(data)) {
+      esc_num <- data$Escolaridade[i]
+      if (is.na(esc_num)) next
+      sc <- data[[o_col]][i]
+      c_val <- if (corte_col %in% names(data)) data[[corte_col]][i] else NA
+
+      rows[[idx]] <- data.frame(
+        Participante = data$Participante[i],
+        Escolaridade = ESC_LABELS[as.character(esc_num)],
+        Esc_num      = esc_num,
+        Subteste     = st$code,
+        Tarefa       = st$name,
+        Pontuacao    = sc,
+        Corte        = c_val,
+        stringsAsFactors = FALSE
+      )
+      idx <- idx + 1
+    }
+  }
+  bind_rows(rows)
+}
+
 # ==============================================================================
-# Função de gráfico: médias por escolaridade com linhas de corte
+# Função de gráfico: Boxplots em blocos de 4 (2x2)
+# Média: Linha azul sólida com valor ao lado
+# Corte: Linha vermelha sólida com valor ao lado
 # ==============================================================================
 
 theme_esc <- theme_minimal(base_size = 11) +
   theme(
     plot.title    = element_text(face = "bold", size = 13, hjust = 0.5),
-    plot.subtitle = element_text(size = 10, hjust = 0.5, color = "gray30"),
+    plot.subtitle = element_text(size = 9.5, hjust = 0.5, color = "gray30"),
     axis.title    = element_text(face = "bold", size = 10),
-    axis.text.x   = element_text(angle = 25, hjust = 1, size = 8),
+    axis.text.x   = element_text(angle = 20, hjust = 1, size = 9),
     panel.grid.minor = element_blank(),
     legend.position  = "bottom",
-    strip.text = element_text(face = "bold", size = 9)
+    legend.box       = "horizontal",
+    strip.text = element_text(face = "bold", size = 10)
   )
 
-plot_medias_corte <- function(desc_df, titulo, subtitulo, draw_corte = TRUE) {
+plot_boxplot_chunk <- function(long_df, titulo, subtitulo, draw_corte = TRUE) {
 
-  plot_df <- desc_df %>%
+  plot_df <- long_df %>%
+    filter(!is.na(Pontuacao)) %>%
     mutate(
       Escolaridade = factor(Escolaridade, levels = c("5-8 anos", "9-11 anos", "12+ anos")),
       Subteste     = factor(Subteste, levels = unique(Subteste))
     )
 
-  p <- ggplot(plot_df, aes(x = Escolaridade, y = Media, fill = Escolaridade)) +
-    geom_col(width = 0.6, alpha = 0.85, color = NA) +
-    geom_errorbar(aes(ymin = pmax(Media - DP, 0), ymax = Media + DP),
-                  width = 0.2, linewidth = 0.45, color = "#374151") +
-    geom_text(aes(label = Media, y = Media + DP),
-              vjust = -0.6, size = 2.7, fontface = "bold", color = "#1F2937")
+  means_df <- plot_df %>%
+    group_by(Subteste, Escolaridade) %>%
+    summarise(
+      Media = mean(Pontuacao, na.rm = TRUE),
+      Corte = ifelse(draw_corte && "Corte" %in% names(plot_df), suppressWarnings(mean(Corte, na.rm = TRUE)), NA),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      Corte = ifelse(is.nan(Corte), NA, Corte),
+      esc_num = as.numeric(factor(Escolaridade, levels = c("5-8 anos", "9-11 anos", "12+ anos"))),
+      media_vjust = ifelse(!is.na(Corte) & Media < Corte, 1.35, -0.35),
+      corte_vjust = ifelse(!is.na(Corte) & Media < Corte, -0.35, 1.35)
+    )
 
-  if (draw_corte && "Corte" %in% names(plot_df) && any(!is.na(plot_df$Corte))) {
+  p <- ggplot(plot_df, aes(x = Escolaridade, y = Pontuacao)) +
+    geom_boxplot(aes(fill = Escolaridade), width = 0.45, alpha = 0.35, color = "#4B5563",
+                 outlier.shape = 21, outlier.size = 1.8, outlier.fill = "#9CA3AF") +
+    geom_jitter(aes(color = Escolaridade), width = 0.10, alpha = 0.40, size = 1.2, show.legend = FALSE)
+
+  # 1. Linha azul sólida de MÉDIA + Valor ao lado
+  p <- p +
+    geom_segment(data = means_df,
+                 aes(x = esc_num - 0.24, xend = esc_num + 0.24, y = Media, yend = Media, linetype = "Média"),
+                 color = "#1D4ED8", size = 0.9) +
+    geom_text(data = means_df,
+              aes(x = esc_num + 0.27, y = Media, label = sprintf("%.1f", Media), vjust = media_vjust),
+              color = "#1D4ED8", size = 3.1, fontface = "bold", hjust = 0)
+
+  # 2. Linha vermelha sólida de CORTE + Valor ao lado
+  if (draw_corte && any(!is.na(means_df$Corte))) {
+    means_corte <- filter(means_df, !is.na(Corte))
     p <- p +
-      geom_crossbar(aes(y = Corte, ymin = Corte, ymax = Corte, linetype = "Ponto de corte"),
-                    width = 0.55, color = "#E63946", fatten = 2, linewidth = 0.6,
-                    show.legend = TRUE) +
-      scale_linetype_manual(values = c("Ponto de corte" = "dashed"), name = NULL)
+      geom_segment(data = means_corte,
+                   aes(x = esc_num - 0.24, xend = esc_num + 0.24, y = Corte, yend = Corte, linetype = "Ponto de corte"),
+                   color = "#DC2626", size = 0.9) +
+      geom_text(data = means_corte,
+                aes(x = esc_num + 0.27, y = Corte, label = sprintf("%.1f", Corte), vjust = corte_vjust),
+                color = "#DC2626", size = 3.1, fontface = "bold", hjust = 0)
   }
 
   p <- p +
-    facet_wrap(~ Subteste, scales = "free_y", ncol = 3) +
+    facet_wrap(~ Subteste, scales = "free_y", ncol = 2) +
     scale_fill_manual(values = ESC_COLORS, name = "Escolaridade") +
-    scale_y_continuous(expand = expansion(mult = c(0.02, 0.20))) +
+    scale_color_manual(values = ESC_COLORS) +
+    scale_linetype_manual(values = c("Média" = "solid", "Ponto de corte" = "solid"), name = NULL) +
+    scale_x_discrete(expand = expansion(mult = c(0.15, 0.35))) +
+    scale_y_continuous(expand = expansion(mult = c(0.08, 0.22))) +
     labs(title = titulo, subtitle = subtitulo,
-         x = "Grupo de Escolaridade", y = "Pontuação média") +
-    theme_esc
+         x = "Grupo de Escolaridade", y = "Pontuação") +
+    theme_esc +
+    guides(
+      fill = guide_legend(order = 1),
+      linetype = guide_legend(order = 2, override.aes = list(color = c("#1D4ED8", "#DC2626"), size = 1.0))
+    )
 
   p
+}
+
+generate_chunked_plots <- function(long_df, prefix_filename, title_prefix, draw_corte = TRUE, max_per_plot = 4) {
+  unique_subtests <- unique(long_df$Subteste)
+  n_sub <- length(unique_subtests)
+  num_chunks <- ceiling(n_sub / max_per_plot)
+  saved_files <- c()
+
+  for (c in 1:num_chunks) {
+    start_idx <- (c - 1) * max_per_plot + 1
+    end_idx   <- min(c * max_per_plot, n_sub)
+    sub_chunk <- unique_subtests[start_idx:end_idx]
+
+    df_chunk <- long_df %>% filter(Subteste %in% sub_chunk)
+    part_str <- if (num_chunks > 1) sprintf(" (Parte %d de %d)", c, num_chunks) else ""
+    fname    <- if (num_chunks > 1) sprintf("%s_part%d.png", prefix_filename, c) else sprintf("%s.png", prefix_filename)
+
+    p <- plot_boxplot_chunk(
+      df_chunk,
+      titulo = paste0(title_prefix, part_str),
+      subtitulo = "Boxplot = Mediana/IQR  |  Linha azul = Média  |  Linha vermelha = Ponto de corte",
+      draw_corte = draw_corte
+    )
+
+    h_val <- if (length(sub_chunk) <= 2) 5.5 else 9.5
+    w_val <- 10.5
+    filepath <- file.path(PLOTS_DIR, fname)
+    ggsave(filepath, plot = p, width = w_val, height = h_val, dpi = 300)
+    saved_files <- c(saved_files, fname)
+  }
+  saved_files
 }
 
 # ==============================================================================
@@ -282,6 +380,11 @@ data_comp <- extract_clean_data(EXCEL_PATH, "MACB completo",          SUBTESTS_C
 data_inic <- extract_clean_data(EXCEL_PATH, "MACB discurso inicial",  SUBTESTS_INIC)
 data_flue <- extract_clean_data(EXCEL_PATH, "MACB fluência verbal",   SUBTESTS_FLUE)
 data_narr <- extract_clean_data(EXCEL_PATH, "MACB discurso narrativo",SUBTESTS_NARR)
+
+long_comp <- extract_long_data(data_comp, SUBTESTS_COMP)
+long_inic <- extract_long_data(data_inic, SUBTESTS_INIC)
+long_flue <- extract_long_data(data_flue, SUBTESTS_FLUE)
+long_narr <- extract_long_data(data_narr, SUBTESTS_NARR)
 
 cat(sprintf("   N total = %d participantes\n", nrow(data_comp)))
 cat(sprintf("   Escolaridade 1 (5-8 anos):  n = %d\n", sum(data_comp$Escolaridade == 1)))
@@ -312,56 +415,18 @@ kw_infer <- run_kw_posthoc(data_narr, SUB_NARR_INFER)
 cat("4. Teste exato de Fisher para Inferência...\n")
 fisher_infer <- run_fisher(data_narr, "Infer")
 
-# ------ Gráficos ------
-cat("5. Gerando gráficos com linhas de corte...\n")
+# ------ Gráficos em blocos de 4 ------
+cat("5. Gerando gráficos em blocos de 4 com Média e Corte em linhas sólidas...\n")
 
-# 5.1 MACb Completo (9 subtestes, 3x3 grid)
-p_comp <- plot_medias_corte(
-  desc_comp,
-  "MACb Completo: médias por escolaridade",
-  "Barras = média ± DP  |  Linha tracejada vermelha = ponto de corte"
-)
-ggsave(file.path(PLOTS_DIR, "medias_macb_completo_esc.png"),
-       plot = p_comp, width = 13, height = 11, dpi = 300)
+files_comp <- generate_chunked_plots(long_comp, "medias_macb_completo_esc", "MACb Completo: distribuição por escolaridade")
+files_inic <- generate_chunked_plots(long_inic, "medias_disc_inicial_esc", "Discurso Inicial: distribuição por escolaridade")
+files_flue <- generate_chunked_plots(long_flue, "medias_fluencia_verbal_esc", "Fluência Verbal: distribuição por escolaridade")
 
-# 5.2 Discurso Inicial (5 subtestes, 2x3 grid)
-p_inic <- plot_medias_corte(
-  desc_inic,
-  "Discurso Inicial: médias por escolaridade",
-  "Barras = média ± DP  |  Linha tracejada vermelha = ponto de corte"
-)
-ggsave(file.path(PLOTS_DIR, "medias_disc_inicial_esc.png"),
-       plot = p_inic, width = 11, height = 8, dpi = 300)
+long_narr_corte <- long_narr %>% filter(Subteste != "Infer")
+files_narr <- generate_chunked_plots(long_narr_corte, "medias_disc_narrativo_esc", "Discurso Narrativo: distribuição por escolaridade")
 
-# 5.3 Fluência Verbal (6 subtestes, 2x3 grid)
-p_flue <- plot_medias_corte(
-  desc_flue,
-  "Fluência Verbal: médias por escolaridade",
-  "Barras = média ± DP  |  Linha tracejada vermelha = ponto de corte"
-)
-ggsave(file.path(PLOTS_DIR, "medias_fluencia_verbal_esc.png"),
-       plot = p_flue, width = 12, height = 8, dpi = 300)
-
-# 5.4 Discurso Narrativo COM corte (IP, InfL, CompT)
-desc_narr_corte <- desc_narr %>% filter(Subteste != "Infer")
-p_narr <- plot_medias_corte(
-  desc_narr_corte,
-  "Discurso Narrativo: médias por escolaridade",
-  "Barras = média ± DP  |  Linha tracejada vermelha = ponto de corte"
-)
-ggsave(file.path(PLOTS_DIR, "medias_disc_narrativo_esc.png"),
-       plot = p_narr, width = 10, height = 5, dpi = 300)
-
-# 5.5 Inferência SEM corte (gráfico separado)
-desc_infer <- desc_narr %>% filter(Subteste == "Infer")
-p_infer <- plot_medias_corte(
-  desc_infer,
-  "Inferência: médias por escolaridade",
-  "Barras = média ± DP  (ponto de corte não disponível)",
-  draw_corte = FALSE
-)
-ggsave(file.path(PLOTS_DIR, "medias_inferencia_esc.png"),
-       plot = p_infer, width = 6, height = 4.5, dpi = 300)
+long_infer <- long_narr %>% filter(Subteste == "Infer")
+files_infer <- generate_chunked_plots(long_infer, "medias_inferencia_esc", "Inferência: distribuição por escolaridade", draw_corte = FALSE)
 
 # ------ Tabela resumo KW ------
 cat("6. Compilando resumo dos testes de Kruskal-Wallis...\n")
