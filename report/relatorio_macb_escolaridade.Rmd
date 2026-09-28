@@ -67,9 +67,9 @@ Os participantes foram divididos em 3 grupos de escolaridade:
 A tabela abaixo compila os resultados do teste de Kruskal-Wallis para a comparação entre os 3 grupos de escolaridade em todos os subtestes analisados:
 
 ```{r kw-resumo-tabela}
-kable(res$kw_resumo[, c("Bloco", "Subteste", "Tarefa", "H", "GL", "p_fmt", "Resultado")],
-      col.names = c("Bloco", "Código", "Subteste / Tarefa", "Estatística H", "gl", "p-valor", "Resultado (alpha=0.05)"),
-      align = c("l", "c", "l", "c", "c", "c", "l"),
+kable(res$kw_resumo[, c("Bloco", "Subteste", "H", "GL", "p_fmt", "Resultado")],
+      col.names = c("Bloco", "Subteste", "Estatística H", "gl", "p-valor", "Resultado (alpha=0.05)"),
+      align = c("l", "c", "c", "c", "c", "l"),
       caption = "Resumo dos testes de Kruskal-Wallis por escolaridade",
       booktabs = TRUE,
       escape = FALSE,
