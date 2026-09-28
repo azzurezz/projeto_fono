@@ -1,34 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---
 title: "Relatório - Análise MACb por Escolaridade e Pontos de Corte Normativos"
 author: "Por: Azzure Alves do Carmo"
@@ -89,7 +58,7 @@ Os participantes foram divididos em 3 grupos de escolaridade:
 
 4. **Teste Exato de Fisher (Subteste Inferência)**: O subteste *Inferência* (Discurso Narrativo) apresenta distribuição binária (0 ou 1) e não possui ponto de corte normativo definido. Aplicou-se o Teste Exato de Fisher para avaliar a associação entre o desempenho e os grupos de escolaridade.
 
-5. **Análise de Alertas e Pontos de Corte**: Foram calculadas as frequências absolutas e relativas (%) de participantes classificados na zona de **alerta** (desempenho abaixo do ponto de corte normativo para a sua faixa de escolaridade).
+5. **Análise de Alertas e Pontos de Corte**: Foram calculadas as frequências absolutas e relativas (%) de participantes classificados na zona de alerta, desempenho abaixo do ponto de corte normativo para a sua faixa de escolaridade.
 
 ---
 
