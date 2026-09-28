@@ -436,7 +436,7 @@ kw_resumo <- bind_rows(
   kw_inic$kw %>% mutate(Bloco = "Discurso Inicial"),
   kw_flue$kw %>% mutate(Bloco = "Fluência Verbal"),
   kw_narr$kw %>% mutate(Bloco = "Discurso Narrativo"),
-  kw_infer$kw %>% mutate(Bloco = "Discurso Narrativo (Inferência)")
+  kw_infer$kw %>% mutate(Bloco = "Discurso Narrativo")
 )
 
 # ------ Prevalência de alertas ------

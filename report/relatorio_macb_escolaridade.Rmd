@@ -60,6 +60,7 @@ Os participantes foram divididos em 3 grupos de escolaridade:
 
 5. **Análise de Alertas e Pontos de Corte**: Foram calculadas as frequências absolutas e relativas (%) de participantes classificados na zona de alerta, desempenho abaixo do ponto de corte normativo para a sua faixa de escolaridade.
 
+6. **Nível de Significância**: Para todos os testes de hipótese inferenciais realizados neste estudo, adotou-se o nível de significância de $\alpha = 0{,}05$.
 ---
 
 # Resumo dos Testes de Kruskal-Wallis
@@ -68,7 +69,7 @@ A tabela abaixo compila os resultados do teste de Kruskal-Wallis para a compara�
 
 ```{r kw-resumo-tabela}
 kable(res$kw_resumo[, c("Bloco", "Subteste", "H", "GL", "p_fmt", "Resultado")],
-      col.names = c("Bloco", "Subteste", "Estatística H", "gl", "p-valor", "Resultado (alpha=0.05)"),
+      col.names = c("Bloco", "Subteste", "Estatística H", "gl", "p-valor", "Resultado"),
       align = c("l", "c", "c", "c", "c", "l"),
       caption = "Resumo dos testes de Kruskal-Wallis por escolaridade",
       booktabs = TRUE,
