@@ -298,10 +298,11 @@ plot_barras_chunk <- function(long_df, titulo, subtitulo, draw_corte = TRUE) {
                 hjust = 0, vjust = 0.5, size = 2.9, color = "#DC2626", fontface = "bold")
   }
 
-  # 3. Rótulo da Média desenhado APÓS a linha de corte (ficando acima na sobreposição)
+  # 3. Rótulo da Média com fundo branco desenhado após a linha de corte (recortando a linha com nitidez)
   p <- p +
-    geom_text(data = means_df, aes(x = Escolaridade, y = Media, label = sprintf("%.1f", Media)),
-              vjust = -0.5, fontface = "bold", size = 3.3, color = "#1F2937")
+    geom_label(data = means_df, aes(x = Escolaridade, y = Media, label = sprintf("%.1f", Media)),
+               vjust = -0.4, fontface = "bold", size = 3.3, color = "#1F2937",
+               fill = "white", linewidth = 0, label.size = NA, label.padding = unit(0.12, "lines"))
 
   p <- p +
     facet_wrap(~ Subteste, scales = "free_y", ncol = 1) +
