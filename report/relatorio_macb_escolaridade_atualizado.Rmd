@@ -107,78 +107,22 @@ kable(res$desc_comp[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana
 
 ### Gráficos de Barras com Média ± DP e Linhas de Corte Normativo
 
-% --- DC e IMe ---
 \begin{figure}[H]
 \centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part1.png}
-  \caption{MACb Completo: DC}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part2.png}
-  \caption{MACb Completo: IMe}
-\end{minipage}
+\includegraphics[width=0.92\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part1.png}
+\caption{MACb Completo: distribuição por escolaridade — Parte 1 de 3 (DC, IMe, IMa, FVL)}
 \end{figure}
 
-% --- IMa e FVL ---
 \begin{figure}[H]
 \centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part3.png}
-  \caption{MACb Completo: IMa}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part4.png}
-  \caption{MACb Completo: FVL}
-\end{minipage}
+\includegraphics[width=0.92\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part2.png}
+\caption{MACb Completo: distribuição por escolaridade — Parte 2 de 3 (PEP, JSi, JSe, ATe)}
 \end{figure}
 
-% --- PEP e JSi ---
 \begin{figure}[H]
 \centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part5.png}
-  \caption{MACb Completo: PEP}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part6.png}
-  \caption{MACb Completo: JSi}
-\end{minipage}
-\end{figure}
-
-% --- JSe e ATe ---
-\begin{figure}[H]
-\centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part7.png}
-  \caption{MACb Completo: JSe}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part8.png}
-  \caption{MACb Completo: ATe}
-\end{minipage}
-\end{figure}
-
-% --- ATa (sozinho, centralizado) ---
-\begin{figure}[H]
-\centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part9.png}
-  \caption{MACb Completo: ATa}
-\end{minipage}
+\includegraphics[width=0.70\textwidth]{../data/plots/escolaridade/barras/barras_medias_macb_completo_esc_part3.png}
+\caption{MACb Completo: distribuição por escolaridade — Parte 3 de 3 (ATa)}
 \end{figure}
 
 \newpage
@@ -216,46 +160,16 @@ kable(res$desc_inic[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana
 
 ### Gráficos de Barras com Média ± DP e Linhas de Corte Normativo
 
-% --- E e C ---
 \begin{figure}[H]
 \centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_inicial_esc_part1.png}
-  \caption{Discurso Inicial: Expressão (E)}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_inicial_esc_part2.png}
-  \caption{Discurso Inicial: Compreensão (C)}
-\end{minipage}
+\includegraphics[width=0.92\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_inicial_esc_part1.png}
+\caption{Discurso Inicial: distribuição por escolaridade — Parte 1 de 2 (E, C, CNV, PLE)}
 \end{figure}
 
-% --- CNV e PLE ---
 \begin{figure}[H]
 \centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_inicial_esc_part3.png}
-  \caption{Discurso Inicial: CNV}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_inicial_esc_part4.png}
-  \caption{Discurso Inicial: PLE}
-\end{minipage}
-\end{figure}
-
-% --- DC (sozinho, centralizado) ---
-\begin{figure}[H]
-\centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_inicial_esc_part5.png}
-  \caption{Discurso Inicial: DC}
-\end{minipage}
+\includegraphics[width=0.70\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_inicial_esc_part2.png}
+\caption{Discurso Inicial: distribuição por escolaridade — Parte 2 de 2 (DC)}
 \end{figure}
 
 \newpage
@@ -292,52 +206,16 @@ kable(res$desc_flue[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana
 
 ### Gráficos de Barras com Média ± DP e Linhas de Corte Normativo
 
-% --- 0-30s e 30-60s ---
 \begin{figure}[H]
 \centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_fluencia_verbal_esc_part1.png}
-  \caption{Flu\^encia Verbal: 0--30s}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_fluencia_verbal_esc_part2.png}
-  \caption{Flu\^encia Verbal: 30--60s}
-\end{minipage}
+\includegraphics[width=0.92\textwidth]{../data/plots/escolaridade/barras/barras_medias_fluencia_verbal_esc_part1.png}
+\caption{Fluência Verbal: distribuição por escolaridade — Parte 1 de 2 (0-30s, 30-60s, 60-90s, 90-120s)}
 \end{figure}
 
-% --- 60-90s e 90-120s ---
 \begin{figure}[H]
 \centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_fluencia_verbal_esc_part3.png}
-  \caption{Flu\^encia Verbal: 60--90s}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_fluencia_verbal_esc_part4.png}
-  \caption{Flu\^encia Verbal: 90--120s}
-\end{minipage}
-\end{figure}
-
-% --- 120-150s e Total ---
-\begin{figure}[H]
-\centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_fluencia_verbal_esc_part5.png}
-  \caption{Flu\^encia Verbal: 120--150s}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_fluencia_verbal_esc_part6.png}
-  \caption{Flu\^encia Verbal: Total}
-\end{minipage}
+\includegraphics[width=0.82\textwidth]{../data/plots/escolaridade/barras/barras_medias_fluencia_verbal_esc_part2.png}
+\caption{Fluência Verbal: distribuição por escolaridade — Parte 2 de 2 (120-150s, Total)}
 \end{figure}
 
 \newpage
@@ -374,30 +252,10 @@ kable(res$desc_narr[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana
 
 ### Gráficos de Barras com Média ± DP e Linhas de Corte Normativo
 
-% --- IP e InfL ---
 \begin{figure}[H]
 \centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_narrativo_esc_part1.png}
-  \caption{Discurso Narrativo: IP}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_narrativo_esc_part2.png}
-  \caption{Discurso Narrativo: InfL}
-\end{minipage}
-\end{figure}
-
-% --- CompT (sozinho, centralizado) ---
-\begin{figure}[H]
-\centering
-\begin{minipage}[t]{0.48\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_narrativo_esc_part3.png}
-  \caption{Discurso Narrativo: CompT}
-\end{minipage}
+\includegraphics[width=0.88\textwidth]{../data/plots/escolaridade/barras/barras_medias_disc_narrativo_esc.png}
+\caption{Discurso Narrativo: distribuição por escolaridade (IP, InfL, CompT)}
 \end{figure}
 
 \vspace{0.3cm}

@@ -1,6 +1,7 @@
 # pasta local de dados 
 /data
 *.log
+*.pdf
 
 # History files
 .Rhistory

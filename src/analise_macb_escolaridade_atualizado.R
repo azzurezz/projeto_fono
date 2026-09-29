@@ -271,8 +271,6 @@ plot_barras_chunk <- function(long_df, titulo, subtitulo, draw_corte = TRUE) {
     group_by(Subteste, Escolaridade) %>%
     summarise(
       Media = mean(Pontuacao, na.rm = TRUE),
-      DP    = sd(Pontuacao, na.rm = TRUE),
-      DP    = ifelse(is.na(DP), 0, DP),
       Corte = ifelse(draw_corte && "Corte" %in% names(plot_df), suppressWarnings(mean(Corte, na.rm = TRUE)), NA),
       .groups = "drop"
     ) %>%
@@ -284,34 +282,32 @@ plot_barras_chunk <- function(long_df, titulo, subtitulo, draw_corte = TRUE) {
   has_corte <- draw_corte && any(!is.na(means_df$Corte))
 
   p <- ggplot() +
-    # 1. Barras de Média limpas
+    # 1. Barras de Média
     geom_col(data = means_df, aes(x = Escolaridade, y = Media, fill = Escolaridade),
              width = 0.52, alpha = 0.85, color = "#1F2937", linewidth = 0.4) +
-    # 2. Barra de erro: Média ± 1 Desvio-Padrão (limitado a 0 no piso)
-    geom_errorbar(data = means_df, aes(x = Escolaridade, ymin = pmax(0, Media - DP), ymax = Media + DP),
-                  width = 0.18, color = "#1F2937", linewidth = 0.6) +
-    # 3. Rótulo com o valor da Média centralizado acima da barra de erro
-    geom_text(data = means_df, aes(x = Escolaridade, y = Media + DP, label = sprintf("%.1f", Media)),
-              vjust = -0.5, fontface = "bold", size = 3.3, color = "#1F2937")
+    # 2. Rótulo da Média acima da barra (ou acima da linha de corte, o que for maior)
+    geom_text(data = means_df, aes(x = Escolaridade,
+                                   y = pmax(Media, ifelse(is.na(Corte), Media, Corte)),
+                                   label = sprintf("%.1f", Media)),
+              vjust = -0.45, fontface = "bold", size = 3.2, color = "#1F2937")
 
-  # 4. Linha horizontal e rótulo do Ponto de Corte Normativo
+  # 3. Linha horizontal do Ponto de Corte + rótulo abaixo da linha
   if (has_corte) {
     means_corte <- filter(means_df, !is.na(Corte))
     p <- p +
       geom_segment(data = means_corte,
                    aes(x = esc_num - 0.35, xend = esc_num + 0.35, y = Corte, yend = Corte, linetype = "Ponto de corte"),
                    color = "#DC2626", linewidth = 1.0) +
-      geom_label(data = means_corte,
-                 aes(x = esc_num + 0.35, y = Corte, label = sprintf("%.1f", Corte)),
-                 hjust = 0, size = 2.8, color = "#DC2626", fontface = "bold",
-                 fill = "white", linewidth = 0.2, label.padding = unit(0.15, "lines"))
+      geom_text(data = means_corte,
+                aes(x = esc_num + 0.38, y = Corte, label = sprintf("%.1f", Corte)),
+                hjust = 0, vjust = 0.5, fontface = "bold", size = 2.9, color = "#DC2626")
   }
 
   p <- p +
-    facet_wrap(~ Subteste, scales = "free_y", ncol = 2) +
+    facet_wrap(~ Subteste, scales = "free_y", ncol = 1) +
     scale_fill_manual(values = ESC_COLORS, name = "Escolaridade") +
-    scale_x_discrete(expand = expansion(mult = c(0.18, 0.25))) +
-    scale_y_continuous(expand = expansion(mult = c(0, 0.22))) +
+    scale_x_discrete(expand = expansion(mult = c(0.18, 0.30))) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.18))) +
     labs(title = titulo, subtitle = subtitulo,
          x = "Grupo de Escolaridade", y = "Pontuação") +
     theme_esc
@@ -334,7 +330,7 @@ plot_barras_chunk <- function(long_df, titulo, subtitulo, draw_corte = TRUE) {
 # Função de geração e exportação de gráficos de barras em blocos de 4
 # ==============================================================================
 
-generate_barras_plots <- function(long_df, base_prefix, title_prefix, draw_corte = TRUE, max_per_plot = 4) {
+generate_barras_plots <- function(long_df, base_prefix, title_prefix, draw_corte = TRUE, max_per_plot = 1) {
   unique_subtests <- unique(long_df$Subteste)
   n_sub <- length(unique_subtests)
   num_chunks <- ceiling(n_sub / max_per_plot)
@@ -347,10 +343,10 @@ generate_barras_plots <- function(long_df, base_prefix, title_prefix, draw_corte
     part_str  <- if (num_chunks > 1) sprintf(" (Parte %d de %d)", c, num_chunks) else ""
     part_suf  <- if (num_chunks > 1) sprintf("_part%d.png", c) else ".png"
 
-    h_val <- if (length(sub_chunk) <= 2) 5.5 else 9.5
-    w_val <- 10.5
+    h_val <- 4.5
+    w_val <- 5.5
 
-    sub_texto <- if (draw_corte) "Barra = Média  |  Barra de erro = ±1 DP  |  Linha vermelha = Ponto de corte normativo" else "Barra = Média  |  Barra de erro = ±1 DP"
+    sub_texto <- if (draw_corte) "Barra = Média  |  Linha vermelha = Ponto de corte normativo" else "Barra = Média"
 
     p_bar <- plot_barras_chunk(
       df_chunk,
