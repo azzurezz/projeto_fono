@@ -464,6 +464,21 @@ Resultado do teste exato de Fisher (Inferência x escolaridade):
 
 \vspace{0.3cm}
 
+### Comparações pareadas post-hoc (Wilcoxon ajustado por Holm)
+
+```{r posthoc-narr-tbl}
+kable(format = "latex", res$kw_narr$posthoc[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
+      col.names = c("Subteste", "Comparação", "Média G1", "Média G2", "Diferença", "p-valor (Holm)", "Resultado"),
+      align = c("c", "l", "c", "c", "c", "c", "l"),
+      caption = "Comparações pareadas post-hoc: Discurso Narrativo",
+      booktabs = TRUE,
+      linesep = calc_linesep(res$kw_narr$posthoc),
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+\vspace{0.3cm}
+
 **Descrição dos resultados (discurso narrativo)**: os subtestes de ideias principais (IP, $p = 0{,}08192$), informações lembradas (InfL, $p = 0{,}05995$) e compreensão do texto (CompT, $p = 0{,}09149$) não apresentaram diferenças estatisticamente significativas entre os níveis de escolaridade pelo teste de Kruskal-Wallis, mantendo ausência de significância nas comparações post-hoc ($p > 0{,}10$). No subteste de inferência, o teste exato de Fisher ($p = 0{,}74913$) confirmou que a taxa de acerto não se associou à escolaridade. Em relação aos pontos de corte, as médias situaram-se próximas ou ligeiramente acima dos limites normativos em todas as faixas, registrando maior vulnerabilidade no grupo de menor escolaridade.
 
 \newpage
