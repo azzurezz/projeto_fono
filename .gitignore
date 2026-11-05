@@ -2,6 +2,7 @@
 /data
 *.log
 *.pdf
+*.xlsx
 
 # History files
 .Rhistory
