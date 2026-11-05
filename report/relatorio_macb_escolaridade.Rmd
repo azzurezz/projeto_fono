@@ -11,6 +11,7 @@ header-includes:
   - \usepackage{booktabs}
   - \usepackage{float}
   - \usepackage{microtype}
+  - \usepackage{longtable}
   - \usepackage{etoolbox}
   - \AtBeginEnvironment{tabular}{\small}
   - \setlength{\tabcolsep}{4pt}
@@ -27,6 +28,12 @@ knitr::opts_chunk$set(
 
 library(knitr)
 library(dplyr)
+
+calc_linesep <- function(df, col = "Subteste") {
+  if (nrow(df) <= 1) return(c())
+  ls <- ifelse(df[[col]][-1] == df[[col]][-nrow(df)], "", "\\hline")
+  c(ls, "")
+}
 
 # Carregar dados processados
 res <- readRDS("../data/results/resultados_macb_escolaridade.rds")
@@ -61,23 +68,22 @@ Os participantes foram divididos em 3 grupos de escolaridade:
 5. **Análise de Alertas e Pontos de Corte**: Foram calculadas as frequências absolutas e relativas (%) de participantes classificados na zona de alerta, desempenho abaixo do ponto de corte normativo para a sua faixa de escolaridade.
 
 6. **Nível de Significância**: Para todos os testes de hipótese inferenciais realizados neste estudo, adotou-se o nível de significância de $\alpha = 0{,}05$.
----
 
 # Resumo dos Testes de Kruskal-Wallis
 
 A tabela abaixo compila os resultados do teste de Kruskal-Wallis para a comparação entre os 3 grupos de escolaridade em todos os subtestes analisados:
 
 ```{r kw-resumo-tabela}
-kable(res$kw_resumo[, c("Bloco", "Subteste", "H", "GL", "p_fmt", "Resultado")],
+kable(format = "latex", res$kw_resumo[, c("Bloco", "Subteste", "H", "GL", "p_fmt", "Resultado")],
       col.names = c("Bloco", "Subteste", "Estatística H", "gl", "p-valor", "Resultado"),
       align = c("l", "c", "c", "c", "c", "l"),
       caption = "Resumo dos testes de Kruskal-Wallis por escolaridade",
       booktabs = TRUE,
+      linesep = calc_linesep(res$kw_resumo, col = "Bloco"),
       escape = FALSE,
       row.names = FALSE)
 ```
 
----
 
 # Análise por Bloco Funcional
 
@@ -86,11 +92,12 @@ kable(res$kw_resumo[, c("Bloco", "Subteste", "H", "GL", "p_fmt", "Resultado")],
 ### Descritiva estratificada por escolaridade
 
 ```{r desc-comp-tbl}
-kable(res$desc_comp[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
+kable(format = "latex", res$desc_comp[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
       col.names = c("Subteste", "Escolaridade", "N", "Média", "DP", "Mediana", "Q1", "Q3", "Ponto de Corte"),
       align = c("c", "l", "c", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva e ponto de corte: MACb Completo",
       booktabs = TRUE,
+      linesep = calc_linesep(res$desc_comp),
       escape = FALSE,
       row.names = FALSE)
 ```
@@ -117,27 +124,28 @@ kable(res$desc_comp[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana
 
 ```{r posthoc-comp-tbl}
 ph_comp_sig <- res$kw_comp$posthoc
-kable(ph_comp_sig[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
+kable(format = "latex", ph_comp_sig[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
       col.names = c("Subteste", "Comparação", "Média G1", "Média G2", "Diferença", "p-valor (Holm)", "Resultado"),
       align = c("c", "l", "c", "c", "c", "c", "l"),
       caption = "Comparações pareadas post-hoc: MACb Completo",
       booktabs = TRUE,
+      linesep = calc_linesep(ph_comp_sig),
       escape = FALSE,
       row.names = FALSE)
 ```
 
----
 
 ## Discurso Inicial
 
 ### Descritiva estratificada por escolaridade
 
 ```{r desc-inic-tbl}
-kable(res$desc_inic[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
+kable(format = "latex", res$desc_inic[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
       col.names = c("Subteste", "Escolaridade", "N", "Média", "DP", "Mediana", "Q1", "Q3", "Ponto de Corte"),
       align = c("c", "l", "c", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva e ponto de corte: Discurso Inicial",
       booktabs = TRUE,
+      linesep = calc_linesep(res$desc_inic),
       escape = FALSE,
       row.names = FALSE)
 ```
@@ -157,27 +165,28 @@ kable(res$desc_inic[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana
 ### Comparações pareadas post-hoc (Wilcoxon ajustado por Holm)
 
 ```{r posthoc-inic-tbl}
-kable(res$kw_inic$posthoc[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
+kable(format = "latex", res$kw_inic$posthoc[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
       col.names = c("Subteste", "Comparação", "Média G1", "Média G2", "Diferença", "p-valor (Holm)", "Resultado"),
       align = c("c", "l", "c", "c", "c", "c", "l"),
       caption = "Comparações pareadas post-hoc: Discurso Inicial",
       booktabs = TRUE,
+      linesep = calc_linesep(res$kw_inic$posthoc),
       escape = FALSE,
       row.names = FALSE)
 ```
 
----
 
 ## Fluência Verbal
 
 ### Descritiva estratificada por escolaridade
 
 ```{r desc-flue-tbl}
-kable(res$desc_flue[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
+kable(format = "latex", res$desc_flue[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
       col.names = c("Intervalo / Subteste", "Escolaridade", "N", "Média", "DP", "Mediana", "Q1", "Q3", "Ponto de Corte"),
       align = c("c", "l", "c", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva e ponto de corte: Fluência Verbal",
       booktabs = TRUE,
+      linesep = calc_linesep(res$desc_flue),
       escape = FALSE,
       row.names = FALSE)
 ```
@@ -197,27 +206,28 @@ kable(res$desc_flue[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana
 ### Comparações pareadas post-hoc (Wilcoxon ajustado por Holm)
 
 ```{r posthoc-flue-tbl}
-kable(res$kw_flue$posthoc[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
+kable(format = "latex", res$kw_flue$posthoc[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
       col.names = c("Subteste", "Comparação", "Média G1", "Média G2", "Diferença", "p-valor (Holm)", "Resultado"),
       align = c("c", "l", "c", "c", "c", "c", "l"),
       caption = "Comparações pareadas post-hoc: Fluência Verbal",
       booktabs = TRUE,
+      linesep = calc_linesep(res$kw_flue$posthoc),
       escape = FALSE,
       row.names = FALSE)
 ```
 
----
 
 ## Discurso Narrativo
 
 ### Descritiva estratificada por escolaridade
 
 ```{r desc-narr-tbl}
-kable(res$desc_narr[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
+kable(format = "latex", res$desc_narr[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
       col.names = c("Subteste", "Escolaridade", "N", "Média", "DP", "Mediana", "Q1", "Q3", "Ponto de Corte"),
       align = c("c", "l", "c", "c", "c", "c", "c", "c", "c"),
       caption = "Estatística descritiva e ponto de corte: Discurso Narrativo",
       booktabs = TRUE,
+      linesep = calc_linesep(res$desc_narr),
       escape = FALSE,
       row.names = FALSE)
 ```
@@ -240,26 +250,20 @@ kable(res$desc_narr[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana
 - $p$-valor = `r res$fisher_infer$p_fmt` (`r res$fisher_infer$resultado`)
 - A associação entre a proporção de acertos no subteste Inferência e a faixa de escolaridade `r ifelse(res$fisher_infer$p_valor < 0.05, "é estatisticamente significativa", "não atingiu significância estatística ao nível alfa = 0.05")`.
 
----
 
 # Prevalência de Alertas Clinicos por Escolaridade
 
 A tabela abaixo apresenta a quantidade ($N$) e o percentual (%) de participantes classificados como **alerta** (abaixo do ponto de corte normativo para a sua escolaridade) em cada subteste:
 
 ```{r alertas-tabela}
-kable(res$alertas_all[, c("Bloco", "Subteste", "Escolaridade", "N_total", "N_alerta", "Pct_alerta")],
-      col.names = c("Bloco Funcional", "Subteste", "Escolaridade", "Total (N)", "Alertas (n)", "Prevalência (%)"),
+kable(format = "latex", res$alertas_all[, c("Bloco", "Subteste", "Escolaridade", "N_total", "N_alerta", "Pct_alerta")],
+      col.names = c("Bloco Funcional", "Subteste", "Escolaridade", "Total (N)", "Alertas (n)", "Prevalência (\\%)"),
       align = c("l", "c", "l", "c", "c", "c"),
       caption = "Prevalência de classificações de alerta por subteste e escolaridade",
       booktabs = TRUE,
+      longtable = TRUE,
+      linesep = calc_linesep(res$alertas_all),
       escape = FALSE,
       row.names = FALSE)
 ```
 
----
-
-# Conclusões e Considerações Finais
-
-1. **Efeito da Escolaridade**: Observa-se uma tendência geral de melhor desempenho (maior pontuação média) conforme aumenta o nível de escolaridade nos subtestes de tarefas complexas como Fluência Verbal, Discurso Conversacional e Interpretação de Metáforas.
-2. **Pontos de Corte Normativos**: Os pontos de corte normativos mais exigentes para grupos de maior escolaridade garantem uma avaliação clínica ajustada, evitando falso-positivos em indivíduos com menor escolaridade.
-3. **Prevalência de Alertas**: Os subtestes com maior proporção de participantes em alerta representam os domínios de maior sensibilidade diagnóstica na amostra avaliada.

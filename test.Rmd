@@ -1,0 +1,13 @@
+---
+title: Test
+output: pdf_document
+header-includes:
+  - \usepackage{booktabs}
+---
+```{r}
+library(knitr)
+df <- data.frame(Subteste = c("DC", "DC", "DC", "IMe", "IMe", "IMe"), Val = 1:6)
+ls <- ifelse(df$Subteste[-1] == df$Subteste[-nrow(df)], "", "\\hline")
+ls <- c(ls, "")
+kable(df, format="latex", booktabs=TRUE, linesep=ls)
+```

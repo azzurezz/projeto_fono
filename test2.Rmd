@@ -1,0 +1,12 @@
+---
+output: pdf_document
+---
+```{r}
+library(knitr)
+df <- data.frame(A = 1:6, Subteste = c("DC", "DC", "DC", "IMe", "IMe", "IMe"), Val = 1:6)
+calc_linesep <- function(df, col = "Subteste") {
+  ls <- ifelse(df[[col]][-1] == df[[col]][-nrow(df)], "", "\\hline")
+  c(ls, "")
+}
+kable(df, format="latex", booktabs=TRUE, linesep=calc_linesep(df))
+```
