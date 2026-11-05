@@ -464,6 +464,20 @@ Resultado do teste exato de Fisher (Inferência x escolaridade):
 
 \vspace{0.3cm}
 
+### Teste de Kruskal-Wallis: Discurso Narrativo
+
+```{r kw-narr-tbl}
+kable(format = "latex", res$kw_narr$kw[, c("Subteste", "Tarefa", "H", "GL", "p_fmt", "Resultado")],
+      col.names = c("Subteste", "Tarefa", "Estatística H", "gl", "p-valor", "Resultado"),
+      align = c("c", "l", "c", "c", "c", "l"),
+      caption = "Resultados do teste de Kruskal-Wallis: Discurso Narrativo",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+\vspace{0.3cm}
+
 ### Comparações pareadas post-hoc (Wilcoxon ajustado por Holm)
 
 ```{r posthoc-narr-tbl}
