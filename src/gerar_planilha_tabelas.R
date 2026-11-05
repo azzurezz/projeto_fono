@@ -166,6 +166,10 @@ colnames(df_r2_flue_posthoc) <- c("Subteste", "Comparação", "Média G1", "Méd
 df_r2_narr_desc <- res2$desc_narr[, c("Subteste", "Escolaridade", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")]
 colnames(df_r2_narr_desc) <- c("Subteste", "Escolaridade", "Média", "Desvio-Padrão", "Mediana", "Q1", "Q3", "Ponto de corte")
 
+# T22b: Kruskal-Wallis Discurso Narrativo por Escolaridade
+df_r2_narr_kw <- res2$kw_narr$kw[, c("Subteste", "Tarefa", "H", "GL", "p_fmt", "Resultado")]
+colnames(df_r2_narr_kw) <- c("Subteste", "Tarefa", "Estatística H", "gl", "p-valor", "Resultado")
+
 # T23: Post-hoc Discurso Narrativo por Escolaridade
 df_r2_narr_posthoc <- res2$kw_narr$posthoc[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")]
 colnames(df_r2_narr_posthoc) <- c("Subteste", "Comparação", "Média G1", "Média G2", "Diferença", "p-valor (Holm)", "Resultado")
