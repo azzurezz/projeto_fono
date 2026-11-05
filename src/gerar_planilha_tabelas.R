@@ -346,6 +346,7 @@ adicionar_aba(wb, "R2_Inic_PostHoc", df_r2_inic_posthoc, style_header_r2, tab_co
 adicionar_aba(wb, "R2_Flue_Descritiva", df_r2_flue_desc, style_header_r2, tab_col_r2)
 adicionar_aba(wb, "R2_Flue_PostHoc", df_r2_flue_posthoc, style_header_r2, tab_col_r2)
 adicionar_aba(wb, "R2_Narr_Descritiva", df_r2_narr_desc, style_header_r2, tab_col_r2)
+adicionar_aba(wb, "R2_Narr_KruskalWallis", df_r2_narr_kw, style_header_r2, tab_col_r2)
 adicionar_aba(wb, "R2_Narr_PostHoc", df_r2_narr_posthoc, style_header_r2, tab_col_r2)
 adicionar_aba(wb, "R2_Inferencia_Fisher", df_r2_infer_fisher, style_header_r2, tab_col_r2)
 adicionar_aba(wb, "R2_Alertas_Clinicos", df_r2_alertas, style_header_r2, tab_col_r2)
