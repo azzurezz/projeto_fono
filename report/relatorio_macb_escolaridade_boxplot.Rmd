@@ -1,0 +1,265 @@
+---
+title: "Relatório - Análise MACb por Escolaridade e Pontos de Corte Normativos"
+author: "Por: Azzure Alves do Carmo"
+output: 
+  pdf_document:
+    number_sections: true
+    highlight: tango
+geometry: margin=2cm
+lang: "pt-BR"
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{float}
+  - \usepackage{microtype}
+  - \usepackage{etoolbox}
+  - \AtBeginEnvironment{tabular}{\small}
+  - \setlength{\tabcolsep}{4pt}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.pos = "H"
+)
+
+library(knitr)
+library(dplyr)
+
+# Carregar dados processados
+res <- readRDS("../data/results/resultados_macb_escolaridade.rds")
+```
+
+# Resumo e Metodologia
+
+Este relatório apresenta a análise estatística estratificada por **Grupo de Escolaridade** e a avaliação do desempenho em relação aos **Pontos de Corte Normativos** dos subtestes da Bateria MACb, aplicada a uma amostra de $N = 43$ participantes.
+
+## Caracterização da amostra por escolaridade
+
+Os participantes foram divididos em 3 grupos de escolaridade:
+
+1. **5 a 8 anos de estudo**: $n = 23$ participantes (53.5% da amostra)
+2. **9 a 11 anos de estudo**: $n = 14$ participantes (32.6% da amostra)
+3. **12 ou mais anos de estudo**: $n = 6$ participantes (14.0% da amostra)
+
+> **Nota sobre o poder estatístico**: O grupo com 12 ou mais anos de escolaridade possui amostra pequena ($n = 6$). Por este motivo, foram adotados exclusivamente testes não paramétricos para todas as comparações inferenciais.
+
+## Métodos estatísticos aplicados
+
+1. **Estatística descritiva estratificada**: Para cada subteste e em cada grupo de escolaridade, foram calculadas métricas de tendência central (Média, Mediana), dispersão (Desvio-Padrão, Q1 e Q3) e amplitude (Mínimo, Máximo), juntamente com o ponto de corte normativo específico de cada escolaridade.
+
+2. **Teste não paramétrico de Kruskal-Wallis**: Utilizado para verificar se existem diferenças estatisticamente significativas entre os 3 grupos de escolaridade para variáveis contínuas/discretas de pontuação. A estatística $H$ é calculada por:
+   $$H = \frac{12}{N(N+1)} \sum_{j=1}^{k} \frac{R_j^2}{n_j} - 3(N+1)$$
+   onde $N = 43$, $k = 3$ grupos, $n_j$ é o tamanho de cada grupo e $R_j$ é a soma dos postos (*ranks*).
+
+3. **Comparações pareadas post-hoc (Wilcoxon pareado com ajuste de Holm)**: Quando o teste de Kruskal-Wallis apresentou $p < 0{,}05$, realizou-se o teste de Wilcoxon para amostras independentes entre cada par de grupos de escolaridade (5-8a vs 9-11a, 5-8a vs 12+a, 9-11a vs 12+a) com correção de Holm para multiplicidade de testes.
+
+4. **Teste Exato de Fisher (Subteste Inferência)**: O subteste *Inferência* (Discurso Narrativo) apresenta distribuição binária (0 ou 1) e não possui ponto de corte normativo definido. Aplicou-se o Teste Exato de Fisher para avaliar a associação entre o desempenho e os grupos de escolaridade.
+
+5. **Análise de Alertas e Pontos de Corte**: Foram calculadas as frequências absolutas e relativas (%) de participantes classificados na zona de alerta, desempenho abaixo do ponto de corte normativo para a sua faixa de escolaridade.
+
+6. **Nível de Significância**: Para todos os testes de hipótese inferenciais realizados neste estudo, adotou-se o nível de significância de $\alpha = 0{,}05$.
+---
+
+# Resumo dos Testes de Kruskal-Wallis
+
+A tabela abaixo compila os resultados do teste de Kruskal-Wallis para a comparação entre os 3 grupos de escolaridade em todos os subtestes analisados:
+
+```{r kw-resumo-tabela}
+kable(res$kw_resumo[, c("Bloco", "Subteste", "H", "GL", "p_fmt", "Resultado")],
+      col.names = c("Bloco", "Subteste", "Estatística H", "gl", "p-valor", "Resultado"),
+      align = c("l", "c", "c", "c", "c", "l"),
+      caption = "Resumo dos testes de Kruskal-Wallis por escolaridade",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+---
+
+# Análise por Bloco Funcional
+
+## MACb Completo
+
+### Descritiva estratificada por escolaridade
+
+```{r desc-comp-tbl}
+kable(res$desc_comp[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
+      col.names = c("Subteste", "Escolaridade", "N", "Média", "DP", "Mediana", "Q1", "Q3", "Ponto de Corte"),
+      align = c("c", "l", "c", "c", "c", "c", "c", "c", "c"),
+      caption = "Estatística descritiva e ponto de corte: MACb Completo",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{../data/plots/escolaridade/medias_macb_completo_esc_part1.png}
+\caption{MACb Completo: distribuição por escolaridade — Parte 1 de 3 (DC, IMe, IMa, FVL)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{../data/plots/escolaridade/medias_macb_completo_esc_part2.png}
+\caption{MACb Completo: distribuição por escolaridade — Parte 2 de 3 (PEP, JSi, JSe, ATe)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\textwidth]{../data/plots/escolaridade/medias_macb_completo_esc_part3.png}
+\caption{MACb Completo: distribuição por escolaridade — Parte 3 de 3 (ATa)}
+\end{figure}
+
+### Comparações pareadas post-hoc (Wilcoxon ajustado por Holm)
+
+```{r posthoc-comp-tbl}
+ph_comp_sig <- res$kw_comp$posthoc
+kable(ph_comp_sig[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
+      col.names = c("Subteste", "Comparação", "Média G1", "Média G2", "Diferença", "p-valor (Holm)", "Resultado"),
+      align = c("c", "l", "c", "c", "c", "c", "l"),
+      caption = "Comparações pareadas post-hoc: MACb Completo",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+---
+
+## Discurso Inicial
+
+### Descritiva estratificada por escolaridade
+
+```{r desc-inic-tbl}
+kable(res$desc_inic[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
+      col.names = c("Subteste", "Escolaridade", "N", "Média", "DP", "Mediana", "Q1", "Q3", "Ponto de Corte"),
+      align = c("c", "l", "c", "c", "c", "c", "c", "c", "c"),
+      caption = "Estatística descritiva e ponto de corte: Discurso Inicial",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{../data/plots/escolaridade/medias_disc_inicial_esc_part1.png}
+\caption{Discurso Inicial: distribuição por escolaridade — Parte 1 de 2 (E, C, CNV, PLE)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\textwidth]{../data/plots/escolaridade/medias_disc_inicial_esc_part2.png}
+\caption{Discurso Inicial: distribuição por escolaridade — Parte 2 de 2 (DC)}
+\end{figure}
+
+### Comparações pareadas post-hoc (Wilcoxon ajustado por Holm)
+
+```{r posthoc-inic-tbl}
+kable(res$kw_inic$posthoc[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
+      col.names = c("Subteste", "Comparação", "Média G1", "Média G2", "Diferença", "p-valor (Holm)", "Resultado"),
+      align = c("c", "l", "c", "c", "c", "c", "l"),
+      caption = "Comparações pareadas post-hoc: Discurso Inicial",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+---
+
+## Fluência Verbal
+
+### Descritiva estratificada por escolaridade
+
+```{r desc-flue-tbl}
+kable(res$desc_flue[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
+      col.names = c("Intervalo / Subteste", "Escolaridade", "N", "Média", "DP", "Mediana", "Q1", "Q3", "Ponto de Corte"),
+      align = c("c", "l", "c", "c", "c", "c", "c", "c", "c"),
+      caption = "Estatística descritiva e ponto de corte: Fluência Verbal",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{../data/plots/escolaridade/medias_fluencia_verbal_esc_part1.png}
+\caption{Fluência Verbal: distribuição por escolaridade — Parte 1 de 2 (0-30s, 30-60s, 60-90s, 90-120s)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{../data/plots/escolaridade/medias_fluencia_verbal_esc_part2.png}
+\caption{Fluência Verbal: distribuição por escolaridade — Parte 2 de 2 (120-150s, Total)}
+\end{figure}
+
+### Comparações pareadas post-hoc (Wilcoxon ajustado por Holm)
+
+```{r posthoc-flue-tbl}
+kable(res$kw_flue$posthoc[, c("Subteste", "Par", "Media_G1", "Media_G2", "Diferenca", "p_fmt", "Resultado")],
+      col.names = c("Subteste", "Comparação", "Média G1", "Média G2", "Diferença", "p-valor (Holm)", "Resultado"),
+      align = c("c", "l", "c", "c", "c", "c", "l"),
+      caption = "Comparações pareadas post-hoc: Fluência Verbal",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+---
+
+## Discurso Narrativo
+
+### Descritiva estratificada por escolaridade
+
+```{r desc-narr-tbl}
+kable(res$desc_narr[, c("Subteste", "Escolaridade", "N", "Media", "DP", "Mediana", "Q1", "Q3", "Corte")],
+      col.names = c("Subteste", "Escolaridade", "N", "Média", "DP", "Mediana", "Q1", "Q3", "Ponto de Corte"),
+      align = c("c", "l", "c", "c", "c", "c", "c", "c", "c"),
+      caption = "Estatística descritiva e ponto de corte: Discurso Narrativo",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../data/plots/escolaridade/medias_disc_narrativo_esc.png}
+\caption{Discurso Narrativo: distribuição por escolaridade (IP, InfL, CompT)}
+\end{figure}
+
+### Análise do Subteste Inferência (Sem Ponto de Corte)
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{../data/plots/escolaridade/medias_inferencia_esc.png}
+\caption{Subteste Inferência: distribuição por escolaridade (Linha azul sólida = Média)}
+\end{figure}
+
+**Resultado do Teste Exato de Fisher (Inferência x Escolaridade)**:
+- $p$-valor = `r res$fisher_infer$p_fmt` (`r res$fisher_infer$resultado`)
+- A associação entre a proporção de acertos no subteste Inferência e a faixa de escolaridade `r ifelse(res$fisher_infer$p_valor < 0.05, "é estatisticamente significativa", "não atingiu significância estatística ao nível alfa = 0.05")`.
+
+---
+
+# Prevalência de Alertas Clinicos por Escolaridade
+
+A tabela abaixo apresenta a quantidade ($N$) e o percentual (%) de participantes classificados como **alerta** (abaixo do ponto de corte normativo para a sua escolaridade) em cada subteste:
+
+```{r alertas-tabela}
+kable(res$alertas_all[, c("Bloco", "Subteste", "Escolaridade", "N_total", "N_alerta", "Pct_alerta")],
+      col.names = c("Bloco Funcional", "Subteste", "Escolaridade", "Total (N)", "Alertas (n)", "Prevalência (%)"),
+      align = c("l", "c", "l", "c", "c", "c"),
+      caption = "Prevalência de classificações de alerta por subteste e escolaridade",
+      booktabs = TRUE,
+      escape = FALSE,
+      row.names = FALSE)
+```
+
+---
+
+# Conclusões e Considerações Finais
+
+1. **Efeito da Escolaridade**: Observa-se uma tendência geral de melhor desempenho (maior pontuação média) conforme aumenta o nível de escolaridade nos subtestes de tarefas complexas como Fluência Verbal, Discurso Conversacional e Interpretação de Metáforas.
+2. **Pontos de Corte Normativos**: Os pontos de corte normativos mais exigentes para grupos de maior escolaridade garantem uma avaliação clínica ajustada, evitando falso-positivos em indivíduos com menor escolaridade.
+3. **Prevalência de Alertas**: Os subtestes com maior proporção de participantes em alerta representam os domínios de maior sensibilidade diagnóstica na amostra avaliada.
